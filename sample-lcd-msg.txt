@@ -1,0 +1,5 @@
+WATER:54%
+TIME:23:18 03/02/19
+HOST:workbench
+IP:192.168.1.71
+ESSID:Top Floor Wifi [77/100]
