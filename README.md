@@ -46,45 +46,43 @@ Each time the progrm runs, it records the water level on the channel. You can th
 ## Installing and running the code
 1. First install the Python libraries on the Pi:
     sudo apt-get update
-		sudo apt-get install rpi.gpio
+    sudo apt-get install rpi.gpio
 1. Enable the GPIO on the Pi
     sudo raspi-config
-		Enable the I2VC and SPI settings from the menu.
-		Restart the Pi.(TODO)
+    Enable the I2VC and SPI settings from the menu.
+    Restart the Pi.(TODO)
 1. Modify the settings in hcsr04_sensor.py to match your GPIO pins (default values may be OK)
     ```
-		# GPIO Pins connected to sensor
-		GPIO_TRIGGER = 23
-		GPIO_ECHO = 24
-		```  
+    # GPIO Pins connected to sensor
+    GPIO_TRIGGER = 23
+    GPIO_ECHO = 24
+    ```  
 1. Measure the height of your sensor above an empty tank. Insert this value into the code.
-		```
-		# sensor dimensions (to convert reading to water depth)
-		SENSOR_HEIGHT = 205
-		```
+    ```
+    # sensor dimensions (to convert reading to water depth)
+    SENSOR_HEIGHT = 205
+    ```
 1. Create your ThingSpeak channel and insert the API key into the python code
-		```
+    ```
     urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_API_HERE&field1=%d" % water_depth)
-		```
+    ```
 1. Run the python code to take a measurement
-		```
-		python hcsr04_sensor.py
-		```
-		or
-
-		```
-		chmod 755 hcsr04_sensor.py
-		./hcsr04_sensor.py
-		```	
+    ```
+    python hcsr04_sensor.py
+    ```
+    or
+    ```
+    chmod 755 hcsr04_sensor.py
+    ./hcsr04_sensor.py
+    ```	
     It will take many (20) samples - pausing in between each sample - and print out the various calculations it is performing. Check the values look correct. It will then try to log the average value to ThingSpeak. Log on to ThingSpeak and check the data point has been recorded.
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
 1. Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
-## You should get 
+## You are ready to go!
 Once the program is up and running, you should get data points being logged to ThingSpeak.
-The default ThingSpeak channel will give you a nice graph. Here is mine:
-![alt text](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15 "Rainwater levels")
+The default ThingSpeak channel will give you a nice graph. [Here is mine](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15):
+![Rainwater levels](rainwater.png)
+
 
 Now you are good to go! Check your water levels. Use water responsibly.
-
-Yoiu are
