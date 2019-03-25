@@ -40,10 +40,10 @@ I noticed that the readings did vary on occasion, so I extended the program to t
 
 Once we have a reliable reading, we can calculate the height of the water based on the height of the sensor above the tank base. You will need to modify this value based on how high/low you install your sensor.
 
-## Logging the data to ThingSpeak
+## Setup ThingSpeak
 The point of this project is to record the water depth so I can easily view it, and so I can analyse how this changes based on weather conditions. This is where the ThingSpeak platform comes in.
 
-The python code will log the water measurements to a ThingSpeak channel. You will need to register to the THingSpeak platform then create your own channel. Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
+The python code will log the water measurements to a ThingSpeak channel. You will need to register to the ThingSpeak platform then create your own channel. The channel needs a single field - "Level". Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
 
 Each time the progrm runs, it records the water level on the channel. You can then view this online (via the ThingSpeak web pages). There is also a simple app for iOS called [Thingview](https://itunes.apple.com/uy/app/thingview/id1284878579). This allows you to access the basic ThingSpeak graphs from your phone (it does not allow you to view any fancy MATLAB visualisations that you may have defined, but it is fine for monitoring the water levels).
 
