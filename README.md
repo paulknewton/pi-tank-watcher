@@ -82,6 +82,9 @@ Each time the progrm runs, it records the water level on the channel. You can th
     ./hcsr04_sensor.py
     ```	
     It will take many (20) samples - pausing in between each sample - and print out the various calculations it is performing. Check the values look correct. It will then try to log the average value to ThingSpeak. Log on to ThingSpeak and check the data point has been recorded.
+    
+    ![Terminal](img/terminal.png)
+    
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
 1. Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
