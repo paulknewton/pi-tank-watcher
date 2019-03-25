@@ -82,7 +82,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
 ## You are ready to go!
 Once the program is up and running, you should get data points being logged to ThingSpeak.
 The default ThingSpeak channel will give you a nice graph. [Here is mine](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15):
-![Rainwater levels](https://github.com/paulknewton/pi-tank-watcher/img/rainwater.png)
+![Rainwater levels](img/rainwater.png)
 
 
 Now you are good to go! Check your water levels. Use water responsibly.
