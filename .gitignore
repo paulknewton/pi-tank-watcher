@@ -1,6 +1,6 @@
-adafruit_keypad_example.py
-adafruit_lcd_example.py
-log_accuweather.py
-hcsr04_sensor.py
+weather/adafruit_keypad_example.py
+weather/adafruit_lcd_example.py
+weather/log_accuweather.py
+sensor/hcsr04_sensor.py
 addAPIs.sh
 .DS_Store
