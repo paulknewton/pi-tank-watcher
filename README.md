@@ -60,7 +60,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
     sudo raspi-config
     ```
     and enable the I2VC and SPI settings from the menu. Restart the Pi.(TODO).
-1. Modify the settings in hcsr04_sensor.py to match your GPIO pins (default values may be OK)
+1. Modify the settings in sensor/hcsr04_sensor.py to match your GPIO pins (default values may be OK)
     ```
     # GPIO Pins connected to sensor
     GPIO_TRIGGER = 23
@@ -77,11 +77,13 @@ Each time the progrm runs, it records the water level on the channel. You can th
     ```
 1. Run the python code to take a measurement
     ```
-    python hcsr04_sensor.py
+    cd sensor
+		python hcsr04_sensor.py
     ```
     or
     ```
-    chmod 755 hcsr04_sensor.py
+    cd sensor
+		chmod 755 hcsr04_sensor.py
     ./hcsr04_sensor.py
     ```	
     It will take many (20) samples - pausing in between each sample - and print out the various calculations it is performing. Check the values look correct. It will then try to log the average value to ThingSpeak. Log on to ThingSpeak and check the data point has been recorded.
@@ -110,14 +112,16 @@ TODO
 # The files
 * img - folder containing images for the README
 * README.md	- this file!
-* create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
-* display-tank-msg.py - UNUSED. Python script to show a message on the Pi LCD screen. Planned for the future for showing the water level on the Pi LCD.
-* dummy_sensor.py - a dummy implementation of the sensor. Used for unit testing only.
-* hcsr04_sensor NO API.py - the only program you need. This takes water measurements via the sensor and logs these to ThingSpeak. Needs to be added to include your API keys.
-* lcd_off.py - UNUSED. Script to switch off the Pi LCD screen. Not used yet.
-* log_accuweather NO API.py	- Script to record weather values via Accuweather platform and log these to ThingSpeak. Needs to be added to include your API keys.
-* sample-accuweather.json - A dummy sample of JSON weather data. Used to test the weather logging process.
-* sample-lcd-msg.txt - UNUSED. A sample message to show on the LCD screen. Used during testing.
-* tests_pytest.py - some unit tests written with the PyTest framework.
-* tests_pyunit.py - some more unit tests written with the built-in Python unit testing framework.
-
+* lcd - files for displaying info on the Pi LCD screen
+    * create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
+    * display-tank-msg.py - UNUSED. Python script to show a message on the Pi LCD screen. Planned for the future for showing the water level on the Pi LCD.
+    * lcd_off.py - UNUSED. Script to switch off the Pi LCD screen. Not used yet.
+    * sample-lcd-msg.txt - UNUSED. A sample message to show on the LCD screen. Used during testing.
+* sensor - files to read water depth from the ultrasound sensor
+    * dummy_sensor.py - a dummy implementation of the sensor. Used for unit testing only.
+    * hcsr04_sensor NO API.py - the only program you need. This takes water measurements via the sensor and logs these to ThingSpeak. Needs to be added to include your API keys.
+    * tests_pytest.py - some unit tests written with the PyTest framework.
+    * tests_pyunit.py - some more unit tests written with the built-in Python unit testing framework.
+* weather - files to log weather data to ThingSpeak
+    * log_accuweather NO API.py	- Script to record weather values via Accuweather platform and log these to ThingSpeak. Needs to be added to include your API keys.
+    * sample-accuweather.json - A dummy sample of JSON weather data. Used to test the weather logging process.
