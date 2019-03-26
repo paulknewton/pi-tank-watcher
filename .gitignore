@@ -1,5 +1,5 @@
-weather/adafruit_keypad_example.py
-weather/adafruit_lcd_example.py
+lcd/adafruit_keypad_example.py
+lcd/adafruit_lcd_example.py
 weather/log_accuweather.py
 sensor/hcsr04_sensor.py
 addAPIs.sh
