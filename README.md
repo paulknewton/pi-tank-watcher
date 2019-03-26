@@ -22,7 +22,7 @@ I have accumulated a lot of [Raspberry Pis](www.raspberrypi.org) over the years.
 
 I decided to connect an ultrasound sensor to the raspberry pi GPIO port, and use this to measure the depth of the water in the tank. An echo wave is fired out to the water, reflects off the water surface and is collected by the sensor. With some simple maths and the speed of sound, you can calculate the depth of the water.
 
-## Installing the sensor
+### Installing the sensor
 There are a lot of tutorials on wiring up an ultrasound sensor (like [this one](https://www.modmypi.com/blog/hc-sr04-ultrasonic-range-sensor-on-the-raspberry-pi) or [this one](https://www.raspberrypi-spy.co.uk/2012/12/ultrasonic-distance-measurement-using-python-part-1/)). The HCSR04 sensor seems very common and only costs a few euros from ebay. It is simple to wire up - you just need a few resistors for a potential divider circuit.
 
 ![HC-SR04 Sensor](img/hc-sr04.jpg)
@@ -33,7 +33,7 @@ I have quite a few pipes and cables dangling around the top of my rainwater tank
 
 ![Sensor wiring](img/sensor.jpg)
 
-## The sensor code
+### The sensor code
 The basic script to trigger the sensor and take a measurement is taken pretty much from the tutorials above, or any of the other tutorials out there on the web. It triggers an echo signal then measures how long it has to wait for the signal to return. The wave speed is fixed, so you can work out the distance travelled. This is suprisingly reliable.
 
 The code has configurable values for the GPIO pins being used. If you are following the tutorial above then the pin values are fine. Otherwise you may need to modify them.
@@ -42,14 +42,14 @@ I noticed that the readings did vary on occasion, so I extended the program to t
 
 Once we have a reliable reading, we can calculate the height of the water based on the height of the sensor above the tank base. You will need to modify this value based on how high/low you install your sensor.
 
-## Setup ThingSpeak
+### Setup ThingSpeak
 The point of this project is to record the water depth so I can easily view it, and so I can analyse how this changes based on weather conditions. This is where the ThingSpeak platform comes in.
 
 The python code will log the water measurements to a ThingSpeak channel. You will need to register to the ThingSpeak platform then create your own channel. The channel needs a single field - "Level". Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
 
 Each time the progrm runs, it records the water level on the channel. You can then view this online (via the ThingSpeak web pages). There is also a simple app for iOS called [Thingview](https://itunes.apple.com/uy/app/thingview/id1284878579). This allows you to access the basic ThingSpeak graphs from your phone (it does not allow you to view any fancy MATLAB visualisations that you may have defined, but it is fine for monitoring the water levels).
 
-## Installing and running the code
+### Installing and running the code
 1. First install the Python libraries on the Pi:
     ```
     sudo apt-get update
@@ -91,7 +91,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
 1. Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
-## You are ready to go!
+### You are ready to go!
 Once the program is up and running, you should get data points being logged to ThingSpeak.
 The default ThingSpeak channel will give you a nice graph. [Here is mine](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15):
 
@@ -100,7 +100,13 @@ The default ThingSpeak channel will give you a nice graph. [Here is mine](https:
 
 Now you are good to go! Check your water levels. Use water responsibly.
 
+## The Raspberry Pi LCD
+TODO
 
+## Tracking the weather
+TODO
+
+## LCD 
 ---
 # The files
 * img - folder containing images for the README
