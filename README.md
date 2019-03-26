@@ -97,3 +97,20 @@ The default ThingSpeak channel will give you a nice graph. [Here is mine](https:
 
 
 Now you are good to go! Check your water levels. Use water responsibly.
+
+
+---
+# The files
+* img - folder containing images for the README
+* README.md	- this file!
+* create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
+* display-tank-msg.py - UNUSED. Python script to show a message on the Pi LCD screen. Planned for the future for showing the water level on the Pi LCD.
+* dummy_sensor.py - a dummy implementation of the sensor. Used for unit testing only.
+* hcsr04_sensor NO API.py - the only program you need. This takes water measurements via the sensor and logs these to ThingSpeak. Needs to be added to include your API keys.
+* lcd_off.py - UNUSED. Script to switch off the Pi LCD screen. Not used yet.
+* log_accuweather NO API.py	- Script to record weather values via Accuweather platform and log these to ThingSpeak. Needs to be added to include your API keys.
+* sample-accuweather.json - A dummy sample of JSON weather data. Used to test the weather logging process.
+* sample-lcd-msg.txt - UNUSED. A sample message to show on the LCD screen. Used during testing.
+* tests_pytest.py - some unit tests written with the PyTest framework.
+* tests_pyunit.py - some more unit tests written with the built-in Python unit testing framework.
+
