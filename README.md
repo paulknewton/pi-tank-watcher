@@ -9,7 +9,7 @@ You must have noticed how much water we all use, not to mention how expensive it
 
 I installed one of those big underground rainwater tanks in my lawn. Water collects from the house roof into the tank, then is pumped out on demand to feed the toilets or outside garden taps.
 
-This works very well. I get a lot of rain where I live, so the tank is often pretty full. But the problem I started to have is that would end up wasting this rainwater - knowing that there would be plenty more rain along soon. Sometimes I would end up emptying the tank without even realising. The system automatically switches over to the town water - so I end up spraying gallons of fesh drinking water on my lawn, thinking that I am using the rainwater. I end up wasting more water than I would without the rainwater tank!
+I get a lot of rain where I live, so the tank was often pretty full. But the problem was...I would end up using even MORE water, because I knew it was free and there would be plenty more rain along soon. Sometimes I would even empty the tank without even realising: watering the lawn, pressure cleaning the terrace... Even worse, the system automatically switches over to the town water once the tank is empty. I could end up wasting more water than I would without the rainwater tank!
 
 Many times I would be down on hands and knees to open the tank access cover, and peering down to see if I still had water. There had a be a better way. Enter...Pi Tank Watcher.
 
@@ -54,9 +54,10 @@ Each time the progrm runs, it records the water level on the channel. You can th
     sudo apt-get install rpi.gpio
     ```
 1. Enable the GPIO on the Pi
+    ```
     sudo raspi-config
-    Enable the I2VC and SPI settings from the menu.
-    Restart the Pi.(TODO)
+    ```
+    and enable the I2VC and SPI settings from the menu. Restart the Pi.(TODO).
 1. Modify the settings in hcsr04_sensor.py to match your GPIO pins (default values may be OK)
     ```
     # GPIO Pins connected to sensor
