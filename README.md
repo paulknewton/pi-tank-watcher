@@ -106,7 +106,6 @@ TODO
 ## Tracking the weather
 TODO
 
-## LCD 
 ---
 # The files
 * img - folder containing images for the README
