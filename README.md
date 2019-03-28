@@ -15,7 +15,14 @@ Many times I would be down on hands and knees to open the tank access cover, and
 
 This project measures the water depth on a regular basis using a Raspberry Pi and a cheap ultrasound sensor. It tidies up the readings to remove any noise, then uploads the values to the [ThingSpeak](https://thingspeak.com/) IoT platform. ThingSpeak is an interesting platform from the makers of MATLAB (the mathematical computation framework). You can log data using a simple REST API, then use the data via the ThingSpeak platform to display and analyse further. This can be as simple as displaying a graph, or using this to cross-reference against weather data. The only limitation is your imagination. You can even view the data on your phone.
 
+I then use the AccuWeather service to read weather data for the region where I live, to identify correlations and patterns. All of this is done using the MATLAB maths framework supported on ThingSpeak.
+
 Now I always have the latest water readings at hand so I can use the water more responsibly. In summer months I can see how the water levels drop, then adjust the water consumption appropriately. The next step is to see how the water levels correlate to changing weather conditions and see if I can identify any interesting patterns. I'll keep you posted!
+
+The rest of this README is explains how to setup the project:
+* Raspberry Pi & the HCSR04 sensor - wiring the sensor  to the Pi and running the logging script to record samples. Includes uploading the sensor data to ThingSpeak
+* The Raspberry Pi LCD - (not yet written) a sub-project to display key information and readings on an LCD connected to the Pi. You don't need this piece of course.
+* Tracking the weather with Accuweather - reading weather data from Accuweather and using this to cross-reference with the water-level readings.
 
 ## Raspberry Pi & the HCSR04 sensor
 I have accumulated a lot of [Raspberry Pis](www.raspberrypi.org) over the years. Cheap and flexible computers that you can use for all kinds of automated tasks.
@@ -100,9 +107,11 @@ The default ThingSpeak channel will give you a nice graph. [Here is mine](https:
 
 ## The Raspberry Pi LCD
 TODO
+(This section will eventually describe how to add an Adafruit LCD to the Pi to display readings)
 
-## Tracking the weather
+## Tracking the weather with
 TODO
+(This section will describe how to log weather data to ThingSpeak
 
 ## Putting it all together...
 OK - nearly there. We have the water level logged by the Pi to the ThingSpeak platform. We have weather data logged to ThingSpeak.
@@ -165,5 +174,5 @@ That's about it. Now you are good to go! Check your water levels. Use water resp
     * tests_pytest.py - some unit tests written with the PyTest framework.
     * tests_pyunit.py - some more unit tests written with the built-in Python unit testing framework.
 * weather - files to log weather data to ThingSpeak
-    * log_accuweather NO API.py	- Script to record weather values via Accuweather platform and log these to ThingSpeak. Needs to be added to include your API keys.
+    * log_accuweather NO API.py	- Script to record weather values and log these to ThingSpeak. Needs to be added to include your API keys.
     * sample-accuweather.json - A dummy sample of JSON weather data. Used to test the weather logging process.
