@@ -93,20 +93,59 @@ Each time the progrm runs, it records the water level on the channel. You can th
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
 1. Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
-### You are ready to go!
 Once the program is up and running, you should get data points being logged to ThingSpeak.
 The default ThingSpeak channel will give you a nice graph. [Here is mine](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15):
 
 ![Rainwater levels](img/rainwater.png)
-
-
-Now you are good to go! Check your water levels. Use water responsibly.
 
 ## The Raspberry Pi LCD
 TODO
 
 ## Tracking the weather
 TODO
+
+## Putting it all together...
+OK - nearly there. We have the water level logged by the Pi to the ThingSpeak platform. We have weather data logged to ThingSpeak.
+Now let's try to put everything together - correlating water levels to weather (e.g. rainfall).
+
+We are going to do this using the MATLAB framework to read water level and rainfall data then plot it together.
+
+First, let's see what we are aiming for - a graph showing the 2 values. Here is a [link to the live graph](https://thingspeak.com/apps/plugins/273517), or a screenshot below:
+
+![x](rainfall-vs-waterlevel.png)
+
+How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the rainfall-vs-waterlevel.matlab file:
+```
+weatherChannel = [PUT_YOUR_WEATHER_CHANNEL_HERE];
+weatherAPIKey = 'PUT_YOUR_WEATHER_API_KEY_HERE';
+rainfallField = [4];
+
+tankChannel = [PUT_YOUR_WATERLEVEL_CHANNEL_HERE];
+tankAPIKey = 'PUT_YOUR_WATERLEVEL_API_KEY_HERE';
+tankLevelField = [1];
+
+
+% Read rainfall
+[rainfall, t1] = thingSpeakRead(weatherChannel, 'Fields', rainfallField, 'NumPoints', 8000, 'ReadKey', weatherAPIKey);
+
+% Read tank water level
+[waterLevel, t2] = thingSpeakRead(tankChannel, 'Fields', tankLevelField, 'NumPoints', 8000, 'ReadKey', tankAPIKey);
+
+%% Visualize Data %%
+
+% vectors must be the same length
+n = min(numel(rainfall), numel(waterLevel))
+t1 = t1(end-n+1:end)
+rainfall = rainfall(end-n+1:end)
+t2 = t2(end-n+1:end)
+waterLevel = waterLevel(end-n+1:end)
+waterLevel = movmean(waterLevel,40);
+
+plotyy(t1, rainfall, t2, waterLevel)
+```
+You need to enter the channel IDs and API keys (get these from the ThingSpeak pages). Click 'Save & Run' and it should create a new graph. If it fails, you will get some debugging output. Once you are happy with the graph you can add it to a channel and make it public/private.
+
+That's about it. Now you are good to go! Check your water levels. Use water responsibly.
 
 ---
 # The files
