@@ -114,7 +114,7 @@ First, let's see what we are aiming for - a graph showing the 2 values. Here is 
 
 ![x](rainfall-vs-waterlevel.png)
 
-How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the rainfall-vs-waterlevel.matlab file:
+How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the [rainfall-vs-waterlevel.matlab](https://github.com/paulknewton/pi-tank-watcher/blob/master/rainfall-vs-waterlevel.matlab) file:
 ```
 weatherChannel = [PUT_YOUR_WEATHER_CHANNEL_HERE];
 weatherAPIKey = 'PUT_YOUR_WEATHER_API_KEY_HERE';
@@ -143,7 +143,9 @@ waterLevel = movmean(waterLevel,40);
 
 plotyy(t1, rainfall, t2, waterLevel)
 ```
-You need to enter the channel IDs and API keys (get these from the ThingSpeak pages). Click 'Save & Run' and it should create a new graph. If it fails, you will get some debugging output. Once you are happy with the graph you can add it to a channel and make it public/private.
+The code is reasonably self explanatory. It reads the sensor and rainfall data from the 2 channels then truncates these to be the same size (because we will draw them on the same graph). Before plotting the values we 'smooth' the waterlevel sensor data. The sensor logging tool already tries to eliminate noise by stripping outliers (see above). However, we still occasionally get some strange values, so we further smooth the data using a moving mean function.
+
+You need to enter the channel IDs and API keys in the code before executing it (get these from the ThingSpeak pages). Click 'Save & Run' and it should create a new graph. If it fails, you will get some debugging output from the MATLAB interpreter. Once you are happy with the graph you can add it to a channel and make it public/private.
 
 That's about it. Now you are good to go! Check your water levels. Use water responsibly.
 
@@ -151,6 +153,7 @@ That's about it. Now you are good to go! Check your water levels. Use water resp
 # The files
 * img - folder containing images for the README
 * README.md	- this file!
+* rainwater-vs-waterfall.matlab - ThingSpeak code to plot water level sensor data against rainfall
 * lcd - files for displaying info on the Pi LCD screen
     * create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
     * display-tank-msg.py - UNUSED. Python script to show a message on the Pi LCD screen. Planned for the future for showing the water level on the Pi LCD.
