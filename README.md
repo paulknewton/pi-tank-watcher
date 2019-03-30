@@ -121,9 +121,9 @@ We are going to do this using the MATLAB framework to read water level and rainf
 
 First, let's see what we are aiming for - a graph showing the 2 values. Here is a [link to the live graph](https://thingspeak.com/apps/plugins/273517), or a screenshot below:
 
-![x](rainfall-vs-waterlevel.png)
+![x](img/rainfall-vs-waterlevel.png)
 
-How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the [rainfall-vs-waterlevel.matlab](https://github.com/paulknewton/pi-tank-watcher/blob/master/rainfall-vs-waterlevel.matlab) file:
+How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the [rainfall-vs-waterlevel.matlab](rainfall-vs-waterlevel.matlab) file:
 ```
 weatherChannel = [PUT_YOUR_WEATHER_CHANNEL_HERE];
 weatherAPIKey = 'PUT_YOUR_WEATHER_API_KEY_HERE';

@@ -4,3 +4,4 @@ weather/log_accuweather.py
 sensor/hcsr04_sensor.py
 addAPIs.sh
 .DS_Store
+img/.DS_Store
