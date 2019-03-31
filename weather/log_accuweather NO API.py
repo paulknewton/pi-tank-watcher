@@ -12,7 +12,7 @@ locationKey = "1037757"  # niederdonven
 weatherUrl = "http://dataservice.accuweather.com/currentconditions/v1/" + locationKey + "?apikey=" + accuApiKey + "&details=true"
 
 # thingspeak
-thingSpeakApi = "PUT_YOUR_THINGSPEAK_CHANNEL_API_HERE"
+thingSpeakApi = "PUT_YOUR_THINGSPEAK_CHANNEL_WRITE_API_HERE"
 
 if __name__ == '__main__':
     # weather_data = json.load(open("sample-accuweather.json", "r"))[0]

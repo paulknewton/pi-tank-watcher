@@ -80,7 +80,7 @@ if __name__ == '__main__':
         water_depth = SENSOR_HEIGHT - clean_measure
         print("Water depth = %.1f cm" % water_depth)
 
-        urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_API_HERE&field1=%d" % water_depth)
+        urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_WRITE_API_HERE&field1=%d" % water_depth)
 
     except KeyboardInterrupt:
         print("Measurement stopped by User")
