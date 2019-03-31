@@ -80,7 +80,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
     # sensor dimensions (to convert reading to water depth)
     SENSOR_HEIGHT = 205
     ```
-1. Create your ThingSpeak channel and insert the API key into the python code
+1. Create your ThingSpeak channel and insert the write API key into the python code
     ```
     urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_API_HERE&field1=%d" % water_depth)
     ```
@@ -141,11 +141,11 @@ First, let's see what we are aiming for - a graph showing the 2 values. Here is 
 How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the [rainfall-vs-waterlevel.matlab](rainfall-vs-waterlevel.matlab) file:
 ```
 weatherChannel = [PUT_YOUR_WEATHER_CHANNEL_HERE];
-weatherAPIKey = 'PUT_YOUR_WEATHER_API_KEY_HERE';
+weatherAPIKey = 'PUT_YOUR_WEATHER_READ_API_KEY_HERE';
 rainfallField = [4];
 
 tankChannel = [PUT_YOUR_WATERLEVEL_CHANNEL_HERE];
-tankAPIKey = 'PUT_YOUR_WATERLEVEL_API_KEY_HERE';
+tankAPIKey = 'PUT_YOUR_WATERLEVEL_READ_API_KEY_HERE';
 tankLevelField = [1];
 
 
