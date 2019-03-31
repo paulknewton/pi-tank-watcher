@@ -54,6 +54,8 @@ The point of this project is to record the water depth so I can easily view it, 
 
 The python code will log the water measurements to a ThingSpeak channel. You will need to register to the ThingSpeak platform then create your own channel. The channel needs a single field - "Level":
 
+![ThingSpeak Sensor Channel](img/thingspeak-sensor-channel.png)
+
 Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
 
 Each time the progrm runs, it records the water level on the channel. You can then view this online (via the ThingSpeak web pages). There is also a simple app for iOS called [Thingview](https://itunes.apple.com/uy/app/thingview/id1284878579). This allows you to access the basic ThingSpeak graphs from your phone (it does not allow you to view any fancy MATLAB visualisations that you may have defined, but it is fine for monitoring the water levels).
@@ -100,7 +102,10 @@ Each time the progrm runs, it records the water level on the channel. You can th
     ![Terminal](img/terminal.png)
     
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
-1. Install the Thinkview app on your phone so you always have access to the data, even on the go.
+    ```
+    0 * * * * /home/pi/tank-watcher/sensor/measure-water-level
+    ```
+1. (Optional) Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
 Once the program is up and running, you should get data points being logged to ThingSpeak.
 The default ThingSpeak channel will give you a nice graph. [Here is mine](https://thingspeak.com/channels/694537/charts/1?bgcolor=%23ffffff&color=%23d62020&dynamic=true&results=60&type=line&update=15):
