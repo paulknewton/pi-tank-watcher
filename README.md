@@ -52,7 +52,9 @@ Once we have a reliable reading, we can calculate the height of the water based 
 ### Setup ThingSpeak
 The point of this project is to record the water depth so I can easily view it, and so I can analyse how this changes based on weather conditions. This is where the ThingSpeak platform comes in.
 
-The python code will log the water measurements to a ThingSpeak channel. You will need to register to the ThingSpeak platform then create your own channel. The channel needs a single field - "Level". Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
+The python code will log the water measurements to a ThingSpeak channel. You will need to register to the ThingSpeak platform then create your own channel. The channel needs a single field - "Level":
+
+Each channel has a (private) API key used by the logging application to record data. You will need to add this API into the python code.
 
 Each time the progrm runs, it records the water level on the channel. You can then view this online (via the ThingSpeak web pages). There is also a simple app for iOS called [Thingview](https://itunes.apple.com/uy/app/thingview/id1284878579). This allows you to access the basic ThingSpeak graphs from your phone (it does not allow you to view any fancy MATLAB visualisations that you may have defined, but it is fine for monitoring the water levels).
 
@@ -109,9 +111,22 @@ The default ThingSpeak channel will give you a nice graph. [Here is mine](https:
 TODO
 (This section will eventually describe how to add an Adafruit LCD to the Pi to display readings)
 
-## Tracking the weather with
+## Tracking the weather data
+This section of the project is going to log weather data for our particular region. This will be recorded via a ThingSpeak channel so we can log the data and combine it with our water-level data from the sensor
+
+### Setup ThingSpeak
+Just like the sensor section above, we will setup a ThingSpeak channel to log our weather data. Go to ThingSpeak.com, logon on the site and create a new channel. This time the channel needs a few more values:
+
+![ThingSpeak Weather Channel](img/thingspeak-weather-channel.png)
+
+Your channel will be assigned an API key for writing data (click on the "API Keys" tab). You will need this later when configuring the logging tool.
+
+### Reading weather data from Accuweather
 TODO
-(This section will describe how to log weather data to ThingSpeak
+
+### Logging the weather data
+TODO
+![Temperature](img/temperature.png)
 
 ## Putting it all together...
 OK - nearly there. We have the water level logged by the Pi to the ThingSpeak platform. We have weather data logged to ThingSpeak.
@@ -121,7 +136,7 @@ We are going to do this using the MATLAB framework to read water level and rainf
 
 First, let's see what we are aiming for - a graph showing the 2 values. Here is a [link to the live graph](https://thingspeak.com/apps/plugins/273517), or a screenshot below:
 
-![x](img/rainfall-vs-waterlevel.png)
+![Rainwater vs Water-depth](img/rainfall-vs-waterlevel.png)
 
 How to achieve this? Create a new 'visualisation' (the term used by ThingSpeak to create custom code). Enter this code below (or download the [rainfall-vs-waterlevel.matlab](rainfall-vs-waterlevel.matlab) file:
 ```
