@@ -3,30 +3,31 @@
 import RPi.GPIO as GPIO
 import time, random, statistics
 from urllib.request import urlopen
- 
-#GPIO Mode (BOARD / BCM)
+
+# GPIO Mode (BOARD / BCM)
 GPIO.setmode(GPIO.BCM)
- 
+
 # GPIO Pins connected to sensor
 GPIO_TRIGGER = 23
 GPIO_ECHO = 24
- 
-#set GPIO direction (IN / OUT)
+
+# set GPIO direction (IN / OUT)
 GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
 GPIO.setup(GPIO_ECHO, GPIO.IN)
 
 # sensor dimensions (to convert reading to water depth)
 SENSOR_HEIGHT = 205  # height of the sensor above an empty tank
 
+
 class Hcsr04Sensor:
     def distance(self):
-        #return random.random() * 5 + 30
-    
+        # return random.random() * 5 + 30
+
         time.sleep(3)
-        
+
         # set Trigger to HIGH
         GPIO.output(GPIO_TRIGGER, True)
- 
+
         # set Trigger after 0.01ms to LOW
         time.sleep(0.00001)
         GPIO.output(GPIO_TRIGGER, False)
@@ -54,14 +55,14 @@ class Hcsr04Sensor:
 if __name__ == '__main__':
     try:
         sensor = Hcsr04Sensor()
-        
+
         # read sensor multiple times to get a stable reading (calculate mean)
         num_measures = 20
         samples = []
         for i in range(0, num_measures):
             samples.append(sensor.distance())
-            print ("Measured Distance = %.1f cm" % samples[i])
-       
+            print("Measured Distance = %.1f cm" % samples[i])
+
         # remove outliers
         stdev = statistics.stdev(samples)
         print("-- stdev = %f" % stdev)
@@ -71,7 +72,7 @@ if __name__ == '__main__':
         clean_data = [x for x in samples if (x > median - 1 * stdev)]
         clean_data = [x for x in clean_data if (x < median + 1 * stdev)]
         print("-- len samples = %d; len clean_data = %d" % (len(samples), len(clean_data)))
-        
+
         # calculate mean measurement
         print("Avg. measurement (incl. outliers) = %.1f cm" % statistics.mean(samples))
         clean_measure = statistics.mean(clean_data)
@@ -80,7 +81,8 @@ if __name__ == '__main__':
         water_depth = SENSOR_HEIGHT - clean_measure
         print("Water depth = %.1f cm" % water_depth)
 
-        urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_WRITE_API_HERE&field1=%d" % water_depth)
+        urlopen(
+            "https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_WRITE_API_HERE&field1=%d" % water_depth)
 
     except KeyboardInterrupt:
         print("Measurement stopped by User")
