@@ -1,5 +1,3 @@
-#! /usr/bin/python3
-
 import pandas as pd
 import csv
 import numpy as np
@@ -48,10 +46,13 @@ def build_graphs(data, show_graphs=False):
     # ------------- figures -------------
     # -----------------------------------
 
-    import matplotlib.pyplot as plt
-    from pandas.plotting import register_matplotlib_converters
+    import matplotlib
+    matplotlib.use('Agg')   # allows figures to be generated on headless server
 
-    register_matplotlib_converters()
+    import  matplotlib.pyplot as plt
+
+    #from pandas.plotting import register_matplotlib_converters
+    #register_matplotlib_converters()
 
     # raw data - vanilla matplotlib
     plt.plot(x, y, label="raw")
