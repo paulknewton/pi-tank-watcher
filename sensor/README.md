@@ -13,20 +13,20 @@ This is the raw data, but complemented with some other basic lines:
 * smooth water readings calcualted using a rolling mean function
 * standard deviation (+/- 1 std dev)
 
-* ![fig_sensor.png](fig_sensor.png)
+![fig_sensor.png](fig_sensor.png)
 
 ### Data cleaned by dropping readings > 1 std dev
-![fig_clean_sensor](fig_clean_sensor.py)
+![fig_clean_sensor](fig_clean_sensor.png)
 
 ### Average tank level during the day
 OK, this doesn't make sense over a long period, but it is useful to see how the level fluctuates over the sample period.
 
-![fig_avg_hourly.png
+![fig_avg_hourly.png](fig_avg_hourly.png)
 
 ### Average tank level per day
 This is a bit more useful - it averages the readings for a given day and plots this on a timeline, showing how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
-![fig_avg_daily.png
+![fig_avg_daily.png](fig_avg_daily.png)
 
 ## How does it do it?
 I will write this up in more detail. In short:
