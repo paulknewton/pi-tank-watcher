@@ -11,18 +11,19 @@ I installed one of those big underground rainwater tanks in my lawn. Water colle
 
 I get a lot of rain where I live, so the tank was often pretty full. But the problem was...I would end up using even MORE water, because I knew it was free and there would be plenty more rain along soon. Sometimes I would even empty the tank without even realising: watering the lawn, pressure cleaning the terrace... Even worse, the system automatically switches over to the town water once the tank is empty. I could end up wasting more water than I would without the rainwater tank!
 
-Many times I would be down on hands and knees to open the tank access cover, and peering down to see if I still had water. There had a be a better way. Enter...Pi Tank Watcher.
+Many times I would be down on hands and knees to open the tank access cover, and peering down to seen if I still had water. There had a be a better way. Enter...Pi Tank Watcher.
 
 This project measures the water depth on a regular basis using a Raspberry Pi and a cheap ultrasound sensor. It tidies up the readings to remove any noise, then uploads the values to the [ThingSpeak](https://thingspeak.com/) IoT platform. ThingSpeak is an interesting platform from the makers of MATLAB (the mathematical computation framework). You can log data using a simple REST API, then use the data via the ThingSpeak platform to display and analyse further. This can be as simple as displaying a graph, or using this to cross-reference against weather data. The only limitation is your imagination. You can even view the data on your phone.
 
 I then use the AccuWeather service to read weather data for the region where I live, to identify correlations and patterns. All of this is done using the MATLAB maths framework supported on ThingSpeak.
 
-Now I always have the latest water readings at hand so I can use the water more responsibly. In summer months I can see how the water levels drop, then adjust the water consumption appropriately. The next step is to see how the water levels correlate to changing weather conditions and see if I can identify any interesting patterns. I'll keep you posted!
+Now I always have the latest water readings on my phone so I can use the water more responsibly. In summer months I can see how the water levels drop, then adjust the water consumption appropriately. The next step is to see how the water levels correlate to changing weather conditions and see if I can identify any interesting patterns. I'll keep you posted!
 
-The rest of this README is explains how to setup the project:
+The rest of this README explains how to setup the project:
 * Raspberry Pi & the HCSR04 sensor - wiring the sensor  to the Pi and running the logging script to record samples. Includes uploading the sensor data to ThingSpeak
 * The Raspberry Pi LCD - (not yet written) a sub-project to display key information and readings on an LCD connected to the Pi. You don't need this piece of course.
 * Tracking the weather with Accuweather - reading weather data from Accuweather and using this to cross-reference with the water-level readings.
+* Analysis the data - I include some examples using MATLAB to generate graphs directly from the ThingSpeak.com platform. I also show how to use python and many data libraries to perform some more complex analysis.
 
 ## Raspberry Pi & the HCSR04 sensor
 I have accumulated a lot of [Raspberry Pis](www.raspberrypi.org) over the years. Cheap and flexible computers that you can use for all kinds of automated tasks.
