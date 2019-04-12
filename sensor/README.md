@@ -16,21 +16,43 @@ This is the raw data, but complemented with some other basic lines:
 ![fig_sensor.png](fig_sensor.png)
 
 ### Data cleaned by dropping readings > 1 std dev
+This strips out data that exceeds 1 standard deviation from the mean. I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank. But as you can see, the data still fluctuates so much, as to make the readings almost unusable.
+
 ![fig_clean_sensor](fig_clean_sensor.png)
 
 ### Average tank level during the day
-OK, this doesn't make sense over a long period, but it is useful to see how the level fluctuates over the sample period.
+OK, this doesn't make sense over a long period, but it is useful to see how the level fluctuates over a shorter period - maybe during the summer. I may change this to only plot a sub-set of the data.
 
 ![fig_avg_hourly.png](fig_avg_hourly.png)
 
 ### Average tank level per day
-This is a bit more useful - it averages the readings for a given day and plots this on a timeline, showing how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
+This is a bit more useful - it averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
 ![fig_avg_daily.png](fig_avg_daily.png)
 
 ## How does it do it?
 I will write this up in more detail. In short:
 * reading from the file is vanilla python
-* vector handling and mathematical calculations (mean, standard deviation) are via numpy
-* rolling mean calculations, 'group-by' operations and filtering of noisy data are via pandas (Series and Dataframes)
-* graphs are generated using matplotlib (via pylot for non-pandas data, or the pandas API for more complex stuff)
+* vector handling and mathematical calculations (mean, standard deviation) are via numpy. Once you have numpy arrays, you can do a lot of data manipulation. And if you need to pass the data on to pandas, the numpy arrays play well with the other libraries.
+* rolling mean calculations, 'group-by' operations and filtering of noisy data are via pandas (Series and Dataframes). This is great for functions that need to apply to a complete data set.
+* graphs are generated using matplotlib (via pylot for non-pandas data, or the pandas API for more complex stuff). Matplotlib has endless possibilities for producing nice-looking graphs, so I've barely scratched the surface here.
+
+## How do I run it?
+First make sure the necessary python libraries are installed:
+```
+pip install numpy pandas matplotlib
+```
+
+Download the data file from your ThingSpeak.com channel (via their website). You could automate this if you like. Remember to choose the CSV format (we could have taken the JSON or XML formats, but CSV can be opened in Excel more easily).
+Run the program, passing the data file as a parameter:
+```
+cd sensor
+./plot_data.py feeds.csv
+```
+
+The program will read the data and output a bunch of graphs. These are saved as fig_XXX.png files in the current directory.
+You can also optionally display the graphs as they are calculated:
+
+```
+./plot_data.py --show feeds.csv
+```
