@@ -180,7 +180,7 @@ You need to enter the channel IDs and API keys in the code before executing it (
 ### Python: Numpy, Pandas & Matplotlib
 MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up with.
 
-I was so impressed by the libraries in pythong than I wrote it up in a separate page [here](README.md).
+I was so impressed by the libraries in pythong than I wrote it up in a separate page [here](sensor/README.md).
 
 
 
