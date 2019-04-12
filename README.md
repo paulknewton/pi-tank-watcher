@@ -133,11 +133,12 @@ TODO
 TODO
 ![Temperature](img/temperature.png)
 
-## Putting it all together...
+## Anlaysing the data
 OK - nearly there. We have the water level logged by the Pi to the ThingSpeak platform. We have weather data logged to ThingSpeak.
 Now let's try to put everything together - correlating water levels to weather (e.g. rainfall).
 
-We are going to do this using the MATLAB framework to read water level and rainfall data then plot it together.
+### ThingSpeak & MATLAB
+As a first step, we are going to use the MATLAB functions provided by ThingSpeak. These offer a powerful analysis framework combined with graphing features. And it is all available for free on the ThingSpeak platform. We are going to use MATLAB to read water level and rainfall data then plot it together.
 
 First, let's see what we are aiming for - a graph showing the 2 values. Here is a [link to the live graph](https://thingspeak.com/apps/plugins/273517), or a screenshot below:
 
@@ -172,11 +173,26 @@ waterLevel = movmean(waterLevel,40);
 
 plotyy(t1, rainfall, t2, waterLevel)
 ```
-The code is reasonably self explanatory. It reads the sensor and rainfall data from the 2 channels then truncates these to be the same size (because we will draw them on the same graph). Before plotting the values we 'smooth' the waterlevel sensor data. The sensor logging tool already tries to eliminate noise by stripping outliers (see above). However, we still occasionally get some strange values, so we further smooth the data using a moving mean function.
+The code is reasonably self explanatory. It reads the sensor and rainfall data from the 2 channels then truncates these to be the same size (because we will draw them on the same graph). Before plotting the values we 'smooth' the waterlevel sensor data. The sensor logging tool already tries to eliminate noise by stripping outliers (see above). However, we still occasionally get some strange values, so we further smooth the data using a moving mean function. (UPDATE: the 'strange' readings got so bad that the sensor is now at a point that it is unusable. See the 'lessons learned' section below).
 
 You need to enter the channel IDs and API keys in the code before executing it (get these from the ThingSpeak pages). Click 'Save & Run' and it should create a new graph. If it fails, you will get some debugging output from the MATLAB interpreter. Once you are happy with the graph you can add it to a channel and make it public/private.
 
+### Python: Numpy, Pandas & Matplotlib
+MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up.
+
+I wasn't disappointed! So I wrote it up in a separate page [here](plot_data.md).
+
+
+
 That's about it. Now you are good to go! Check your water levels. Use water responsibly.
+
+---
+# My experiences so far
+The sensor has been running for some time now (4 months?), so I thought I would record a few experiences and lessons learned:
+
+* *The Raspberry Pi is great* - I've been a big fan of this small computer for a long time. Both for the things you can achieve with it (like this) and the wider picture of how it is trying to engage kids with the wonders of technology. I've used Pis for plenty of different things but this is the first time I am hooking it up to a sensor. The world of IoT has unleashed tons of boards, interfaces and dongles. I know many people will say a simpler platform like the Arduino is better for this kind of basic project (lower power, more robust, cheaper). Many might even say a mechanical water-level float is sufficient. Maybe they are right. All I can say is that for projects like this that interact with the real-world (via GPIO) and do some kind of non-trivial processing (stripping outlier readings, uploading data via REST and even generating some analytics)...well, I find the Pi unbeatable. It uses the same tools and programming environment that you find on your desktop - you write once and run anywhere. Do not underestimate the importance of a homogeneous toolbox! And most of all, this has been great fun...
+
+* *The HC-SR04 sensor is not so great* - ultrasonic sensors don't come cheaper than this. These little sensors open up a world of possibilities for spatial detection with almost no cost. My first experiments with these were so positive - I couldn't believe the accuracy and the ease of use. Since wiring the sensor up and sticking it in a damp water tank...the results have not been quite so good. Readings were perfect for the first few weeks, but started to become increasingly erratic. After a few months, the readings are telling me the tank is half-empty when in fact it is full to the brim (confirmed by my bright-green, rain-soaked grass!). I assume this is coming from the damp and generally unpleasant conditions of living in a water tank for weeks on end. I already changed the sensor once, which immediately returned the sensor readings to their former glory. But that didn't last long, and it wasn't long before the readings were degrading again. I've tried stripping out outliers during the sensor sampling process (prior to upload) and smoothing the readings a posteriori (in MATLAB, or with the python code in my plot_data.py program). This would help if the readings were just noisy - generally accurate readings, but interspersed with some erroneous data - but my experience of the HC-SR04 readings is that they simply degrade to a point where they are unusable. I may try to introduce a 'correction' factor in the code, but I don't have a clear view just yet on 'how' the sensor  is failing - is it a linear degradation?. I may get a better idea once the summer starts, to see how the false readings change as the water level changes (so far we have had so much rain, the tank is always full!). Let's see.
 
 ---
 # The files
