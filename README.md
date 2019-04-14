@@ -179,9 +179,11 @@ The code is reasonably self explanatory. It reads the sensor and rainfall data f
 You need to enter the channel IDs and API keys in the code before executing it (get these from the ThingSpeak pages). Click 'Save & Run' and it should create a new graph. If it fails, you will get some debugging output from the MATLAB interpreter. Once you are happy with the graph you can add it to a channel and make it public/private.
 
 ### Python: Numpy, Pandas & Matplotlib
-MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up with.
+MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up with. Lots of graphs and other stuff:
 
-I was so impressed by the libraries in pythong than I wrote it up in a separate page [here](sensor/README.md).
+![fig_sensor.png](sensor/fig_sensor.png)
+
+I was so impressed by the libraries in python than I wrote it up in a separate page [here](sensor/README.md).
 
 
 
