@@ -36,7 +36,7 @@ This is done in the weather/plot_data.py code by iterating over all the combinat
 
 What do the graphs show (apart from the fact that weather patterns are complex and my analysis won't reveal very much)? Well, we can see that humidity and temperature seem inversely proportional - higher temperatures show lower humidity. Here is a the specific graph:
 
-![fig_humidity_temp.png](fig_humidity_temp.png)
+![fig_humidity_temp.png](../weather/fig_humidity_temp.png)
 
 ## How does it do it?
 I will write this up in more detail. In short:
