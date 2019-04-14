@@ -34,9 +34,14 @@ This is a bit more useful - it averages the readings for a given day and plots t
 These graphs plot the different measurements (pressure, humidity, time, rainfall) against either to determine any obvious correlations.
 This is done in the weather/plot_data.py code by iterating over all the combinations and generating a grid of subplots. This is too large to display here, so view it [here](../weather/fig_weather.png).
 
+What do the graphs show (apart from the fact that weather patterns are complex and my analysis won't reveal very much)? Well, we can see that humidity and temperature seem inversely proportional - higher temperatures show lower humidity. Here is a the specific graph:
+
+![fig_humidity_temp.png](fig_humidity_temp.png)
+
 ## How does it do it?
 I will write this up in more detail. In short:
-* reading from the file is vanilla python
+* reading from the file is vanilla python or (for the weather graphs) directly via numpy (even easier)
+* timezone handline is a bit of a pain
 * vector handling and mathematical calculations (mean, standard deviation) are via numpy. Once you have numpy arrays, you can do a lot of data manipulation. And if you need to pass the data on to pandas, the numpy arrays play well with the other libraries.
 * rolling mean calculations, 'group-by' operations and filtering of noisy data are via pandas (Series and Dataframes). This is great for functions that need to apply to a complete data set.
 * graphs are generated using matplotlib (via pylot for non-pandas data, or the pandas API for more complex stuff). Matplotlib has endless possibilities for producing nice-looking graphs, so I've barely scratched the surface here.
