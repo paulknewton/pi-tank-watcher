@@ -30,6 +30,10 @@ This is a bit more useful - it averages the readings for a given day and plots t
 
 ![fig_avg_daily.png](fig_avg_daily.png)
 
+### Weather data correlations
+These graphs plot the different measurements (pressure, humidity, time, rainfall) against either to determine any obvious correlations.
+This is done in the weather/plot_data.py code by iterating over all the combinations and generating a grid of subplots. This is too large to display here, so view it [here](../weather/fig_weather.png).
+
 ## How does it do it?
 I will write this up in more detail. In short:
 * reading from the file is vanilla python
