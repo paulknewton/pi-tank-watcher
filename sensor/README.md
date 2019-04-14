@@ -34,7 +34,7 @@ This is a bit more useful - it averages the readings for a given day and plots t
 These graphs plot the different measurements (pressure, humidity, time, rainfall) against either to determine any obvious correlations.
 This is done in the weather/plot_data.py code by iterating over all the combinations and generating a grid of subplots. This is too large to display here, so view it [here](../weather/fig_weather.png).
 
-What do the graphs show (apart from the fact that weather patterns are complex and my analysis won't reveal very much)? Well, we can see that humidity and temperature seem inversely proportional - higher temperatures show lower humidity. Here is a the specific graph:
+What do the graphs show (apart from the fact that weather patterns are complex and my analysis won't reveal very much)? Well, we can see that humidity and temperature seem inversely proportional - higher temperatures show lower humidity. Here is the specific graph:
 
 ![fig_humidity_temp.png](../weather/fig_humidity_temp.png)
 
