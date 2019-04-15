@@ -183,7 +183,7 @@ MATLAB seems like a really powerful framework. My old PhD colleagues were all us
 
 ![fig_sensor.png](sensor/fig_sensor.png)
 
-I was so impressed by the libraries in python than I wrote it up in a separate page [here](sensor/README.md).
+I was so impressed by the libraries in python than I wrote it up in a separate page [here](GRAPHS.md).
 
 
 
