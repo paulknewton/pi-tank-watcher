@@ -72,13 +72,18 @@ Each time the progrm runs, it records the water level on the channel. You can th
     sudo raspi-config
     ```
     and enable the I2VC and SPI settings from the menu. Restart the Pi.(TODO).
+1. Install the other python libraries (if you are using a virtualenv, then drop the 'sudo'):
+```
+    cd pi-tank-watcher
+    pip install -r requirements.txt
+````
 1. Modify the settings in sensor/hcsr04_sensor.py to match your GPIO pins (default values may be OK)
     ```
     # GPIO Pins connected to sensor
     GPIO_TRIGGER = 23
     GPIO_ECHO = 24
     ```  
-1. Measure the height of your sensor above an empty tank. Insert this value into the code.
+1. Measure the height of your sensor above an empty tank. Insert this value into the code (this is used to convert the sensor reading into a water depth measurement).
     ```
     # sensor dimensions (to convert reading to water depth)
     SENSOR_HEIGHT = 205
