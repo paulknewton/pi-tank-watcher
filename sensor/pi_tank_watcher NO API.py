@@ -9,22 +9,23 @@ USE_GPIO = False
 if USE_GPIO:
     import RPi.GPIO as GPIO
 
+    # GPIO Pins connected to sensor
+    GPIO_TRIGGER = 23
+    GPIO_ECHO = 24
+
 # sensor dimensions (to convert reading to water depth)
 SENSOR_HEIGHT = 205  # height of the sensor above an empty tank
 
 
 class Hcsr04Sensor:
-    # GPIO Pins connected to sensor
-    GPIO_TRIGGER = 23
-    GPIO_ECHO = 24
 
     def __init__(self):
+        # GPIO Mode (BOARD / BCM)
+        GPIO.setmode(GPIO.BCM)
+
         # set GPIO direction (IN / OUT)
         GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
         GPIO.setup(GPIO_ECHO, GPIO.IN)
-
-        # GPIO Mode (BOARD / BCM)
-        GPIO.setmode(GPIO.BCM)
 
     def distance(self):
         # return random.random() * 5 + 30
@@ -97,7 +98,7 @@ if __name__ == '__main__':
         hcsr04_sensor = Hcsr04Sensor()
         thing_speak = ThingSpeak()
 
-        log_water_depth(sensor, thing_speak)
+        log_water_depth(hcsr04_sensor, thing_speak)
 
     except KeyboardInterrupt:
         print("Measurement stopped by User")
