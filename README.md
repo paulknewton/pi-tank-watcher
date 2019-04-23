@@ -72,13 +72,22 @@ Each time the progrm runs, it records the water level on the channel. You can th
     sudo raspi-config
     ```
     and enable the I2VC and SPI settings from the menu. Restart the Pi.(TODO).
-1. Modify the settings in sensor/hcsr04_sensor.py to match your GPIO pins (default values may be OK)
+1. Install the other python libraries (if you are using a virtualenv, then drop the 'sudo'):
+```
+    cd pi-tank-watcher
+    pip install -r requirements.txt
+````
+1. Enable the GPIO code in pi_tank_watcher.py (by default this is uncommented to allow the unit tests to run). Just uncomment the line "USE_GPIO = True":
+    ```
+    # USE_GPIO = True   # uncomment this on the Pi
+    ```
+1. Modify the pin settings in pi_tank_watcher.py. These need to match the pins where you connected your sendor (default values may be OK)
     ```
     # GPIO Pins connected to sensor
     GPIO_TRIGGER = 23
     GPIO_ECHO = 24
     ```  
-1. Measure the height of your sensor above an empty tank. Insert this value into the code.
+1. Measure the height of your sensor above an empty tank. Insert this value into the code (this is used to convert the sensor reading into a water depth measurement).
     ```
     # sensor dimensions (to convert reading to water depth)
     SENSOR_HEIGHT = 205
@@ -87,24 +96,18 @@ Each time the progrm runs, it records the water level on the channel. You can th
     ```
     urlopen("https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_API_HERE&field1=%d" % water_depth)
     ```
-1. Run the python code to take a measurement
+1. Run the python code (with python 3) to take a measurement
     ```
     cd sensor
-		python hcsr04_sensor.py
+    python pi_tank_watcher.py
     ```
-    or
-    ```
-    cd sensor
-		chmod 755 hcsr04_sensor.py
-    ./hcsr04_sensor.py
-    ```	
     It will take many (20) samples - pausing in between each sample - and print out the various calculations it is performing. Check the values look correct. It will then try to log the average value to ThingSpeak. Log on to ThingSpeak and check the data point has been recorded.
     
     ![Terminal](img/terminal.png)
     
-1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour)
+1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour). Note your path to a Python interpreter may be different.
     ```
-    0 * * * * /home/pi/tank-watcher/sensor/measure-water-level
+    0 * * * * /usr/bin/python3 /home/pi/tank-watcher/sensor/measure-water-level
     ```
 1. (Optional) Install the Thinkview app on your phone so you always have access to the data, even on the go.
 

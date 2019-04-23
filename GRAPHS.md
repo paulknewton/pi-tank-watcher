@@ -45,7 +45,7 @@ What do the graphs show (apart from the fact that weather patterns are complex a
 
 ![fig_humidity_temp.png](weather/fig_humidity_temp.png)
 
-## How do the prorams work?
+## How does the code work?
 I will write this up in more detail. In short:
 * sensor data is read from a file via CSV reader; weather data is read from a file directly via numpy
 * timezone handling is a bit of a pain
