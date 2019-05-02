@@ -58,7 +58,6 @@ class ThingSpeak:
 
     def __init__(self, api_key):
         self.api_key = api_key
-        print("api key = ", self.api_key)
 
     def store(self, water_depth):
         urlopen(
