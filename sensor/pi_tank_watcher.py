@@ -5,8 +5,8 @@ import time
 from urllib.request import urlopen
 import argparse
 
-# sensor dimensions (to convert reading to water depth)
-SENSOR_HEIGHT = 205  # height of the sensor above an empty tank
+
+# SENSOR_HEIGHT = 205  # height of the sensor above an empty tank
 
 
 class Hcsr04Sensor:
@@ -96,8 +96,10 @@ def log_water_depth(sensor, data_store, sensor_height):
 
 if __name__ == '__main__':
     # read command-line args
-    parser = argparse.ArgumentParser(description="Monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor")
+    parser = argparse.ArgumentParser(
+        description="Monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor")
     parser.add_argument("things_speak_api", help="API key to write new sensor readings to thingspeak.com channel")
+    parser.add_argument("sensor_height", help="Height of the sensor above an empty tank", type=float)
     args = parser.parse_args()
     print(args)
 
@@ -105,7 +107,7 @@ if __name__ == '__main__':
         hcsr04_sensor = Hcsr04Sensor(23, 24)
         thing_speak = ThingSpeak(args.things_speak_api)
 
-        log_water_depth(hcsr04_sensor, thing_speak, SENSOR_HEIGHT)
+        log_water_depth(hcsr04_sensor, thing_speak, args.sensor_height)
 
     except KeyboardInterrupt:
         print("Measurement stopped by User")
