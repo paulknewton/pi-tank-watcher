@@ -3,29 +3,26 @@
 import statistics
 import time
 from urllib.request import urlopen
-
-# enable on Pi
-USE_GPIO = False
-if USE_GPIO:
-    import RPi.GPIO as GPIO
-
-    # GPIO Pins connected to sensor
-    GPIO_TRIGGER = 23
-    GPIO_ECHO = 24
+import argparse
 
 # sensor dimensions (to convert reading to water depth)
 SENSOR_HEIGHT = 205  # height of the sensor above an empty tank
 
 
 class Hcsr04Sensor:
+    def __init__(self, gpio_trigger, gpio_echo):
+        import RPi.GPIO as GPIO
 
-    def __init__(self):
+        # GPIO Pins connected to sensor
+        self.gpio_trigger = gpio_trigger
+        self.gpio_echo = gpio_echo
+
         # GPIO Mode (BOARD / BCM)
         GPIO.setmode(GPIO.BCM)
 
         # set GPIO direction (IN / OUT)
-        GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-        GPIO.setup(GPIO_ECHO, GPIO.IN)
+        GPIO.setup(self.gpio_trigger, GPIO.OUT)
+        GPIO.setup(self.gpio_echo, GPIO.IN)
 
     def distance(self):
         # return random.random() * 5 + 30
@@ -33,21 +30,21 @@ class Hcsr04Sensor:
         time.sleep(3)
 
         # set Trigger to HIGH
-        GPIO.output(GPIO_TRIGGER, True)
+        GPIO.output(self.gpio_trigger, True)
 
         # set Trigger after 0.01ms to LOW
         time.sleep(0.00001)
-        GPIO.output(GPIO_TRIGGER, False)
+        GPIO.output(self.gpio_trigger, False)
 
         StartTime = time.time()
         StopTime = time.time()
 
         # save StartTime (after start of echo pulse)
-        while GPIO.input(GPIO_ECHO) == 0:
+        while GPIO.input(self.gpio_echo) == 0:
             StartTime = time.time()
 
         # save time of arrival
-        while GPIO.input(GPIO_ECHO) == 1:
+        while GPIO.input(self.gpio_echo) == 1:
             StopTime = time.time()
 
         # time difference between start and arrival
@@ -61,12 +58,16 @@ class Hcsr04Sensor:
 
 class ThingSpeak:
 
+    def __init__(self, api_key):
+        self.api_key = api_key
+        print("api key = ", self.api_key)
+
     def store(self, water_depth):
         urlopen(
-            "https://api.thingspeak.com/update?api_key=PUT_YOUR_THINGSPEAK_CHANNEL_WRITE_API_HERE&field1=%d" % water_depth)
+            "https://api.thingspeak.com/update?api_key=" + self.api_key + "&field1=%d" % water_depth)
 
 
-def log_water_depth(sensor, data_store):
+def log_water_depth(sensor, data_store, sensor_height):
     """Read sensor multiple times to get a stable reading (calculate mean) and log to the logger store. Readings are taken 20 times. Outliers > median +/- 1 std dev are discarded. Arithmetic mean of the remaining samples is calculated to 2 decimal places."""
     num_measures = 20
     samples = []
@@ -87,18 +88,24 @@ def log_water_depth(sensor, data_store):
     print("Avg. measurement (incl. outliers) = %.2f cm" % statistics.mean(samples))
     clean_measure = statistics.mean(clean_data)
     print("Avg. measurement (excl. outliers) = %.2f cm" % clean_measure)
-    water_depth = round(SENSOR_HEIGHT - clean_measure, 2)  # log to 2 decimal places
+    water_depth = round(sensor_height - clean_measure, 2)  # log to 2 decimal places
 
     print("Logging water depth = %s cm" % water_depth)
     data_store.store(water_depth)
 
 
 if __name__ == '__main__':
-    try:
-        hcsr04_sensor = Hcsr04Sensor()
-        thing_speak = ThingSpeak()
+    # read command-line args
+    parser = argparse.ArgumentParser(description="Monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor")
+    parser.add_argument("things_speak_api", help="API key to write new sensor readings to thingspeak.com channel")
+    args = parser.parse_args()
+    print(args)
 
-        log_water_depth(hcsr04_sensor, thing_speak)
+    try:
+        hcsr04_sensor = Hcsr04Sensor(23, 24)
+        thing_speak = ThingSpeak(args.things_speak_api)
+
+        log_water_depth(hcsr04_sensor, thing_speak, SENSOR_HEIGHT)
 
     except KeyboardInterrupt:
         print("Measurement stopped by User")

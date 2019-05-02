@@ -87,7 +87,7 @@ def test_setup(setup):
 def test_quiet_sensor(setup):
     """Test the tank watcher function with quiet readings"""
     sensor, store = setup
-    pi_tank_watcher.log_water_depth(sensor, store)
+    pi_tank_watcher.log_water_depth(sensor, store, 205)
 
     assert store.get_last_reading() == 167.36
 
@@ -96,6 +96,6 @@ def test_noisy_sensor(setup):
     """Test the tank watcher function with noisy readings"""
     sensor, store = setup
     sensor.set_noisy(True)
-    pi_tank_watcher.log_water_depth(sensor, store)
+    pi_tank_watcher.log_water_depth(sensor, store, 205)
 
     assert store.get_last_reading() == 166.93
