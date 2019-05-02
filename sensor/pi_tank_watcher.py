@@ -11,8 +11,6 @@ import argparse
 
 class Hcsr04Sensor:
     def __init__(self, gpio_trigger, gpio_echo):
-        import RPi.GPIO as GPIO
-
         # GPIO Pins connected to sensor
         self.gpio_trigger = gpio_trigger
         self.gpio_echo = gpio_echo
@@ -104,6 +102,7 @@ if __name__ == '__main__':
     print(args)
 
     try:
+        import RPi.GPIO as GPIO
         hcsr04_sensor = Hcsr04Sensor(23, 24)
         thing_speak = ThingSpeak(args.things_speak_api)
 
