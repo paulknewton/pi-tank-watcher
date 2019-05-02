@@ -3,7 +3,7 @@
 # and log them to my ThingSpeak.com channel
 #
 
-import json
+import argparse
 import requests
 
 if __name__ == '__main__':
