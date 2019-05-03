@@ -86,8 +86,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
 1. Create your ThingSpeak channel and note down the write API key. Again, you will use this later.
 1. Run the python code (with python 3) to take a measurement. Provide the API key and sensor height as parameters.
     ```
-    cd sensor
-    python3 pi_tank_watcher.py thing_speak_api sensor_height
+    python3 tank_watcher.py thing_speak_api sensor_height
     ```
     It will take many (20) samples - pausing in between each sample - and print out the various calculations it is performing. Check the values look correct. It will then try to log the average value to ThingSpeak. Log on to ThingSpeak and check the data point has been recorded.
     
@@ -95,7 +94,7 @@ Each time the progrm runs, it records the water level on the channel. You can th
     
 1. Once you are sure it is working, schedule the program as a cron job (e.g. every hour). Note your path to a Python interpreter may be different.
     ```
-    0 * * * * /usr/bin/python3 /home/pi/tank-watcher/sensor/measure-water-level thing_speak_api sensor_height
+    0 * * * * /usr/bin/python3 /home/pi/pi-tank-watcher/tank-watcher.py thing_speak_api sensor_height
     ```
 1. (Optional) Install the Thinkview app on your phone so you always have access to the data, even on the go.
 
@@ -192,19 +191,32 @@ The sensor has been running for some time now (4 months?), so I thought I would 
 
 ---
 # The files
-* img - folder containing images for the README
 * README.md	- this file!
-* rainwater-vs-waterfall.matlab - ThingSpeak code to plot water level sensor data against rainfall
-* lcd - files for displaying info on the Pi LCD screen
+* requirements.txt - python installation dependencies
+* img folder - misc files used in this README and the other Markdown pages on this site
+* lcd folder - files for displaying info on the Pi LCD screen
     * create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
     * display-tank-msg.py - UNUSED. Python script to show a message on the Pi LCD screen. Planned for the future for showing the water level on the Pi LCD.
     * lcd_off.py - UNUSED. Script to switch off the Pi LCD screen. Not used yet.
     * sample-lcd-msg.txt - UNUSED. A sample message to show on the LCD screen. Used during testing.
-* sensor - files to read water depth from the ultrasound sensor
-    * dummy_sensor.py - a dummy implementation of the sensor. Used for unit testing only.
-    * hcsr04_sensor NO API.py - the only program you need. This takes water measurements via the sensor and logs these to ThingSpeak. Needs to be added to include your API keys.
-    * tests_pytest.py - some unit tests written with the PyTest framework.
-    * tests_pyunit.py - some more unit tests written with the built-in Python unit testing framework.
-* weather - files to log weather data to ThingSpeak
-    * log_accuweather NO API.py	- Script to record weather values and log these to ThingSpeak. Needs to be added to include your API keys.
+* files for logging water-level data from the sensor
+    * tank_watcher.py - the main program you need. This takes water measurements via the sensor and logs these to ThingSpeak.
+    * test_tank_watcher.py - PyTest unit tests for the sensor logging
+    * rainwater-vs-waterfall.matlab - ThingSpeak code to plot water level sensor data against rainfall
+    * thing_speak.py - wrapper class to log data to an (arbitrary) ThingSpeak channel
+* some generated graphs
+    * GRAPHS.md
+    * plot_waterdepth.py - plot graphs of the water level
+    * fig_avg_daily.png
+    * fig_avg_hourly.png
+    * fig_clean_sensor.png
+    * fig_sensor.png
+    * plot_weather.py - plot graphs of the weather
+    * fig_weather.png
+* files for the sump pump monitor
+    * pump_watcher.py - record pump on/off and log these to ThingSpeak
+    * test_pump.py - PyTest unit tests for the pump monitor
+* files for accuweather
+    * log_accuweather.py - record weather values and log these to ThingSpeak.
     * sample-accuweather.json - A dummy sample of JSON weather data. Used to test the weather logging process.
+    * join_sensor_weather.py - unused
