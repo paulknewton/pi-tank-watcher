@@ -1,7 +1,8 @@
-import math
-import itertools
 import argparse
-from datetime import timezone, timedelta, datetime
+import itertools
+import math
+from datetime import datetime
+
 from numpy import genfromtxt
 
 

@@ -1,9 +1,10 @@
-import pandas as pd
-import csv
-import numpy as np
-import dateutil.tz
 import argparse
-from datetime import timezone, timedelta, datetime
+import csv
+from datetime import datetime
+
+import dateutil.tz
+import numpy as np
+import pandas as pd
 
 
 def read_data(filename):
@@ -20,7 +21,7 @@ def read_data(filename):
     x = list(x)[1:]
     y = list(y)[1:]
 
-    return (x, y)
+    return x, y
 
 
 def build_graphs(data, show_graphs=False):

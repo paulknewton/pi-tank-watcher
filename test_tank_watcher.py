@@ -1,6 +1,6 @@
 import pytest
-import pi_tank_watcher
-import random
+import tank_watcher
+import thing_speak as ts
 
 
 class DummySensor:
@@ -52,8 +52,8 @@ class DummyStore:
             last_reading = 0
         return last_reading
 
-    def store(self, reading):
-        self.readings.append(reading)
+    def log(self, event):
+        self.readings.append(event)
 
 
 @pytest.fixture
@@ -70,7 +70,7 @@ def setup():
     return DummySensor(), DummyStore()
 
 
-def test_setup(setup):
+def test_mock_objects(setup):
     """Test the dummy sensor/logger are working"""
     sensor, data_store = setup
 
@@ -79,7 +79,7 @@ def test_setup(setup):
 
     assert data_store.get_last_reading() == 0
     num_readings = len(data_store.get_logged_readings())
-    data_store.store(reading)
+    data_store.log(reading)
     assert data_store.get_last_reading() == reading
     assert len(data_store.get_logged_readings()) - num_readings == 1
 
@@ -87,15 +87,34 @@ def test_setup(setup):
 def test_quiet_sensor(setup):
     """Test the tank watcher function with quiet readings"""
     sensor, store = setup
-    pi_tank_watcher.log_water_depth(sensor, store, 205)
+    tank_watcher.log_water_depth(sensor, store, 205)
 
-    assert store.get_last_reading() == 167.36
+    assert store.get_last_reading() == [167.36]
 
 
 def test_noisy_sensor(setup):
     """Test the tank watcher function with noisy readings"""
     sensor, store = setup
     sensor.set_noisy(True)
-    pi_tank_watcher.log_water_depth(sensor, store, 205)
+    tank_watcher.log_water_depth(sensor, store, 205)
 
-    assert store.get_last_reading() == 166.93
+    assert store.get_last_reading() == [166.93]
+
+
+def test_thing_speak_simple():
+    """Test the ThingSpeak channel class (event with single field)"""
+    channel = ts.ThingSpeak("myapi", test_mode=True)
+    assert channel.log(["hello"]) == "https://api.thingspeak.com/update?api_key=myapi&field1=hello"
+
+
+def test_thing_speak_multiple():
+    """Test the ThingSpeak channel class (event with multiple fields)"""
+    channel = ts.ThingSpeak("myapi", test_mode=True)
+    assert channel.log(
+        ["hello", "goodbye"]) == "https://api.thingspeak.com/update?api_key=myapi&field1=hello&field2=goodbye"
+
+
+def test_thing_speak_empty():
+    """Test the ThingSpeak channel class (empty event)"""
+    channel = ts.ThingSpeak("myapi", test_mode=True)
+    assert channel.log([]) == "https://api.thingspeak.com/update?api_key=myapi"

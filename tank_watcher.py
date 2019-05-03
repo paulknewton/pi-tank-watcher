@@ -2,7 +2,7 @@
 
 import statistics
 import time
-from urllib.request import urlopen
+import thing_speak as ts
 import argparse
 
 
@@ -54,16 +54,6 @@ class Hcsr04Sensor:
         return distance
 
 
-class ThingSpeak:
-
-    def __init__(self, api_key):
-        self.api_key = api_key
-
-    def store(self, water_depth):
-        urlopen(
-            "https://api.thingspeak.com/update?api_key=" + self.api_key + "&field1=%d" % water_depth)
-
-
 def log_water_depth(sensor, data_store, sensor_height):
     """Read sensor multiple times to get a stable reading (calculate mean) and log to the logger store. Readings are taken 20 times. Outliers > median +/- 1 std dev are discarded. Arithmetic mean of the remaining samples is calculated to 2 decimal places."""
     num_measures = 20
@@ -88,7 +78,7 @@ def log_water_depth(sensor, data_store, sensor_height):
     water_depth = round(sensor_height - clean_measure, 2)  # log to 2 decimal places
 
     print("Logging water depth = %s cm" % water_depth)
-    data_store.store(water_depth)
+    data_store.log([water_depth])
 
 
 if __name__ == '__main__':
@@ -102,8 +92,9 @@ if __name__ == '__main__':
 
     try:
         import RPi.GPIO as GPIO
+
         hcsr04_sensor = Hcsr04Sensor(23, 24)
-        thing_speak = ThingSpeak(args.thing_speak_api)
+        thing_speak = ts.ThingSpeak(args.thing_speak_api)
 
         log_water_depth(hcsr04_sensor, thing_speak, args.sensor_height)
 
