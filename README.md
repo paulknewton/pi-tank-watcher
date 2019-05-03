@@ -193,6 +193,7 @@ The sensor has been running for some time now (4 months?), so I thought I would 
 # The files
 * README.md	- this file!
 * requirements.txt - python installation dependencies
+* .travis.yml - config for Travis-CI.org continuous integration site
 * img folder - misc files used in this README and the other Markdown pages on this site
 * lcd folder - files for displaying info on the Pi LCD screen
     * create-msg.sh	- UNUSED. Script to generate a message for display on the Pi LCD screen.
