@@ -24,7 +24,8 @@ The rest of this README explains how to setup the project:
 * Raspberry Pi & the HCSR04 sensor - wiring the sensor  to the Pi and running the logging script to record samples. Includes uploading the sensor data to ThingSpeak
 * The Raspberry Pi LCD - (not yet written) a sub-project to display key information and readings on an LCD connected to the Pi. You don't need this piece of course.
 * Tracking the weather with Accuweather - reading weather data from Accuweather and using this to cross-reference with the water-level readings.
-* Analysis the data - I include some examples using MATLAB to generate graphs directly from the ThingSpeak.com platform. I also show how to use python and many data libraries to perform some more complex analysis.
+* Analysing the data - I include some examples using MATLAB to generate graphs directly from the ThingSpeak.com platform. I also show how to use python and many data libraries to perform some more complex analysis.
+* Connecting an external sump pump - I have a custom sump pump controller which monitors the water level under by house, and pumps water from the ground - into the rainwater tank - when the level exceeds a certain level. Once the water is evacuated, the pump cuts out and waits again the water level to rise. I connected this pump the Raspberry Pi so I can log when the pump switches on/off (via ThingSpeak). 
 
 ## Raspberry Pi & the HCSR04 sensor
 I have accumulated a lot of [Raspberry Pis](www.raspberrypi.org) over the years. Cheap and flexible computers that you can use for all kinds of automated tasks.
@@ -175,7 +176,8 @@ MATLAB seems like a really powerful framework. My old PhD colleagues were all us
 
 I was so impressed by the libraries in python than I wrote it up in a separate page [here](GRAPHS.md).
 
-
+## Connecting an external sump pump
+The Pi monitors the sump pump under my house, as it switches on and off and fills the rainwater tank. This is described here.
 
 That's about it! Now you are good to go! Check your water levels. Use water responsibly.
 
