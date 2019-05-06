@@ -9,7 +9,7 @@ This works just fine. Not too noisy. Pretty cheap. It can evacuate a lot of wate
 
 First of all - the float activation. The pump works with an on/off float that gets pulled up as the water rises. When the water drops, the float returns back. Easy. But you don't get much control over when the pump actually switches on - it seems to vary quite a lot. Sometimes, the pump stays on all the time because the float got wedged against something. Not great!
 
-And the other things is the minimum water level. The float is attached to a short cable which you can lengthen/shorten to give some control over when the pump cuts out. But the minimum water depth is still too high for what I wanted - I want to pump out ALL of the excess water. Not really beause of concerns over flooding (the minimum water level is just fine), but I don’t like the idea of large quantities of water under my house. Maybe it is just me.
+And the other thing is the minimum water level. The float is attached to a short cable which you can lengthen/shorten to give some control over when the pump cuts out. But the minimum water depth is still too high for what I wanted - I want to pump out ALL of the excess water. Not really beause of concerns over flooding (the minimum water level is just fine), but I don’t like the idea of large quantities of water under my house. Maybe it is just me.
 
 Basically, I was looking for something with a bit more precision over the water level trigger points. Something I can configure more easily. And who knows, maybe something I can hook up to some kind of monitoring.
 After quite a few hours spent on the internet, a few false starts, and some guidance from my electrical-engineer brother, I came up with a solution. The rest of this page describes the final solution. I hope some of your find it useful. And notice how a simple idea gradually grows into something more and more complicated...!
@@ -22,7 +22,7 @@ The idea is to have a float switch that rises and falls water level. Not a clunk
 
 As the water-level rises, the float engages. This triggers the sump pump and water is pumped away. As the water-level drops, the switch disengages and the pump cuts out. Each time it rains, the cycle begins again.
 
-Sounds pretty simple…
+Sounds pretty simple...
 
 ## To switch or not to switch? (or how I learned what hysteresis is)
 This is probably the most interesting part. In theory, the controller is just a switch that opens and closes the mains voltage supply as the float rises and falls. This is usually done via a relay: the water float controls the opening/closing of the relay, and the relay switches the mains voltage on/off. Just connect the output of the relay to the sump pump and off you go.
@@ -33,7 +33,7 @@ The main problem with sump pump controllers is how to avoid the problem of over-
 
 So what is the solution?
 
-My previous sump (with the bright-coloured float) uses a XXX float. This is slow to switch on the pump, but also slow to switch it off. This results in a gentle activation/de-activation cycle. So how to get something similar with my shiny-new floats?
+My previous sump (with the bright-coloured float) uses a tethered float. This is slow to switch on the pump, but also slow to switch it off. This results in a gentle activation/de-activation cycle. So how to get something similar with my shiny new float?
 
 Let's define 2 water-levels: an upper and lower - and get the pump to switch on/off based on these extreme values. As the water-level rises, wait until the water reaches the upper mark before starting. Then allow the pump to keep evacuating water until it reaches the lower mark. Once the pump switches off again, it waits until the water rises all the way to the upper level again before repeating the cycle. By separating the on/off triggers (upper/lower marks), we avoid this rapid on/off activity that is causing so many problems.
 
@@ -48,43 +48,48 @@ I won't go into the pros and cons of all the solutions I found (or rather, the p
 
 ![float-double](img/float-double.jpg)
 
-* Keep it simple (mechanical not solid-state) – theto re are a lot of solution based around solid-state solutions. These often use well-known chipsets used widely in electronics. But the solution will have to work in some pretty unpleasant conditions (cold, maybe a bit damp). I wanted something simple that would keep running. And more to the point, when it stops running (as it inevitably will one day), I want to be able to work out why without messing around with semiconductors. I mean, it’s only a switch right, we are not building a computer!
+* Keep it simple (mechanical not solid-state) – there are a lot of solution based around solid-state solutions. These often use well-known chipsets used widely in electronics. But the solution will have to work in some pretty unpleasant conditions (cold, maybe a bit damp). I wanted something simple that would keep running. And more to the point, when it stops running (as it inevitably will one day), I want to be able to work out why without messing around with semiconductors. I mean, it’s only a switch right, we are not building a computer!
 
 *	Keep it safe – relays are used to separate low-voltage switching signals from high-voltage mains current. In theory, a single relay can do this job (low-voltage input, switching high-voltage output). But relays can fail and there is always a risk of voltages jumping across the gaps. No-one should be touching this circuit, but the last thing I want it so have high-voltage current running through my sump! In the solution below, I use 2 relays to keep the switching logic physically separate from the mains feed.
 
-The final solution is known as a feedback circuit. This is very simple, but also quite clever:
+The final solution is known as a feedback circuit. This is very simple, but also quite clever.
+First we take the double relays. The relay control signals are at the bottom, the switched outputs are at the top:
 
-![schema](img/schema.jpg)
+![relay](img/relay.jpg)
 
-1. The lower-float acts as the decision maker for the higher float. When the water reaches this lower-float, it primes the circuit. So far, nothing else happens: no pumping, no relay switching, just the activation of the decision logic (I extended the circuit to switch on a yellow LED at this point, but this is just window dressing).
-1. The water keeps rising. Eventually, it reaches the level of the upper float. The upper float switch closes which activates the output of the right-hand side relay.
-1. The signal of the right-hand relay I used to activate the left-hand side relay. I explained above why I preferred to have a 2nd relay to control the mains voltage and keep it separate from the low-voltage sensors. The relay switches over and enables the main current to flow. The pump jumps into life and starts pumping.
-1. This is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback…
-1. The pump continues to work and eventually the water-level drops below lower-level. At this point, the lower-float switch opens and the feedback loop is broken. The relay is no llner kept open and it returns back to the original position. The right-hand relay closes. This cuts the signal to the left-hand relay, and the mains current stops. The pump switches off and we are back to the starting state
+Now we annotate it with the wiring:
+
+![schema](img/schematic.jpg)
+
+1. The lower-float acts as the memory for the higher float. When the water reaches this lower-float, it primes the circuit. So far, nothing else happens: no pumping, no relay switching. But this step is key because it is what will ensure our pump stays on when it finally does get activated in Step 2. I extended the circuit to switch on a yellow LED at this point, but this is just window dressing.
+1. The water keeps rising. Eventually, it reaches the level of the upper float. The upper float switch closes which activates the output of the right-hand side relay. At this point, I extended the circuit to light a green LED.
+1. The signal of the right-hand relay is used to activate the left-hand side relay. I explained above why I preferred to have a 2nd relay to control the mains voltage and keep it separate from the low-voltage sensors. The relay switches over and enables the main current to flow. The pump jumps into life and starts pumping.
+1. This is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback loop from the lower-float ensures that the signal stays high. Even when the upper float opens again, the relay remains switched and the pump keeps running.
+1. The pump continues to work and eventually the water-level drops below the lower-level. At this point, the lower-float switch opens and the feedback loop is broken. The relay is no longer kept open and it returns back to the original position. The right-hand relay closes. This cuts the signal to the left-hand relay, and the mains current stops. The pump switches off and we are back to the starting state.
 
 All we have to do is wait until it rains again, and the entire cycle starts again.
 
 I mocked up the circuit on a prototyping breadboard to check it was working.
-I added a few LEDs to show when the controller is plugged in and when the lower- and upper-floats are activated.
+A few additional LEDs show when the controller is plugged in (red) and when the lower- and upper-floats are activated (yellow/green).
 Finally, I added an override switch to force pumping even back to the lower-level (not shown).
 The circuit looks a bit more complicated than the schema because I didn't have exactly the correct resistors, so had to chain a few together.
 
 ![breadboard](img/breadboard.jpg)
 
-Once I was happy with everything, I soldered everything up on a circuit board.
+Once I was happy with everything, I transferred everything over to a prototype board and soldered it up.
 Again, it looks a lot more complicated than it is because of all the resistors.
 
 ![circuit](img/circuit.jpg)
 
 ## The enclosure
-Nearly there. I bought a junction box and installed some 3.5mm jack sockets water-level sensors.
-I also added an output signal to indicate when the pump switches on/off…which I plugged into my Raspberry Pi (but more on that later).
+Nearly there. We have a circuit, but I wanted it all packaged up into a box to protect, and prevent coming near to the mains voltage. I bought a junction box so I could avoid too much drilling, and installed some 3.5mm jack sockets for the water-level sensors. The 12V transformer (used to power the relay and the sensors) was screwed to the junction box with some risers.
 A mains socket was sliced apart and mounted on to the surface of the enclosure. This is the mains output that will be switched on/off by the water-level, and will power the sump pump.
+A few labels on the outside, and we were good to go.
 
 ![enclosure](img/enclosure.jpg)
 
 ## Installing the floats
-I wanted a way to install the floats in the sump, but also protect them from getting knocked around. I came up with a solution using a short piece of plastic drainpipe and s drainpipe bracket which I screwed to the side of the sump. The sensor is screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
+I wanted a way to install the floats in the sump, but also protect them from getting knocked around (I still wanted to keep my old sump pump as backup, but space gets a bit tight in there, and I was worried that my floats could get tangled up). I came up with a solution using a short piece of plastic drainpipe and a drainpipe bracket which I screwed to the side of the sump. The sensor was screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
 
 IMG
 
