@@ -38,7 +38,7 @@ def build_graphs(data, show_graphs=False):
             tzinfo=dateutil.tz.tzutc()),
         x))
 
-    y = np.array(list(map(int, y)))
+    y = np.array(list(map(float, y)))
 
     # print(x)
     # print(y)
