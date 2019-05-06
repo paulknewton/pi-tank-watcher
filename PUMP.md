@@ -3,7 +3,7 @@
 ## The problem
 Like many people, I have a sump pump running under my house that pumps out any excess water under the cellar. I started off with one of those general-purpose submersible pumps you find in any hardware store. You know, the ones with a bright-coloured float on a short cable:
 
-IMG
+![old-sump-pump](img/old-sump-pump.jpg)
 
 This works just fine. Not too noisy. Pretty cheap. It can evacuate a lot of water when it needs to. But I was nevery really that with the pump.
 
@@ -18,7 +18,7 @@ After quite a few hours spent on the internet, a few false starts, and some guid
 Let's start with an explanation of how the controller works.
 The idea is to have a float switch that rises and falls water level. Not a clunky on/off float, but something with a bit more control like this:
 
-IMG
+![float](img/float.jpg)
 
 As the water-level rises, the float engages. This triggers the sump pump and water is pumped away. As the water-level drops, the switch disengages and the pump cuts out. Each time it rains, the cycle begins again.
 
@@ -46,7 +46,7 @@ I won't go into the pros and cons of all the solutions I found (or rather, the p
 
 * Avoid electrodes - many solutions dip wires (or welding rods or any number of other variations) into the sump. These are positioned at the upper/lower positions. When the water rises, it acts as a conductor and closes the circuit. The problem is that water will electrolyse the rods over time, causing a build-up. The conductivity will drop until it eventually doesn't work any more. Don’t do this. Tt is pretty easy to get stainless steel floats on-line. Either buy 2 floats (one for the upper-level, and one for the lower-level), or you can even buy a single piece with 2 integrated floats like this (this is the approach I went for):
 
-IMG
+![float-double](img/float-double.jpg)
 
 * Keep it simple (mechanical not solid-state) – theto re are a lot of solution based around solid-state solutions. These often use well-known chipsets used widely in electronics. But the solution will have to work in some pretty unpleasant conditions (cold, maybe a bit damp). I wanted something simple that would keep running. And more to the point, when it stops running (as it inevitably will one day), I want to be able to work out why without messing around with semiconductors. I mean, it’s only a switch right, we are not building a computer!
 
@@ -54,15 +54,39 @@ IMG
 
 The final solution is known as a feedback circuit. This is very simple, but also quite clever:
 
-IMG
+![schema](img/schema.jpg)
 
-*	Step 1: The lower-float acts as the decision maker for the higher float. When the water reaches this lower-float, it primes the circuit. So far, nothing else happens: no pumping, no relay switching, just the activation of the decision logic (I extended the circuit to switch on a yellow LED at this point, but this is just window dressing).
-*	Step 2: the water keeps rising. Eventually, it reaches the level of the upper float. The upper float switch closes which activates the output of the right-hand side relay.
-*	Step 3: the signal of the right-hand relay I used to activate the left-hand side relay. I explained above why I preferred to have a 2nd relay to control the mains voltage and keep it separate from the low-voltage sensors. The relay switches over and enables the main current to flow. The pump jumps into life and starts pumping.
-*	Step 4: this is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback…
-*	Step 5: the pump continues to work and eventually the water-level drops below lower-level. At this point, the lower-float switch opens and the feedback loop is broken. The relay is no llner kept open and it returns back to the original position. The right-hand relay closes. This cuts the signal to the left-hand relay, and the mains current stops. The pump switches off and we are back to the starting state
+1. The lower-float acts as the decision maker for the higher float. When the water reaches this lower-float, it primes the circuit. So far, nothing else happens: no pumping, no relay switching, just the activation of the decision logic (I extended the circuit to switch on a yellow LED at this point, but this is just window dressing).
+1. The water keeps rising. Eventually, it reaches the level of the upper float. The upper float switch closes which activates the output of the right-hand side relay.
+1. The signal of the right-hand relay I used to activate the left-hand side relay. I explained above why I preferred to have a 2nd relay to control the mains voltage and keep it separate from the low-voltage sensors. The relay switches over and enables the main current to flow. The pump jumps into life and starts pumping.
+1. This is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback…
+1. The pump continues to work and eventually the water-level drops below lower-level. At this point, the lower-float switch opens and the feedback loop is broken. The relay is no llner kept open and it returns back to the original position. The right-hand relay closes. This cuts the signal to the left-hand relay, and the mains current stops. The pump switches off and we are back to the starting state
 
 All we have to do is wait until it rains again, and the entire cycle starts again.
+
+I mocked up the circuit on a prototyping breadboard to check it was working.
+I added a few LEDs to show when the controller is plugged in and when the lower- and upper-floats are activated.
+Finally, I added an override switch to force pumping even back to the lower-level (not shown).
+The circuit looks a bit more complicated than the schema because I didn't have exactly the correct resistors, so had to chain a few together.
+
+![breadboard](img/breadboard.jpg)
+
+Once I was happy with everything, I soldered everything up on a circuit board.
+Again, it looks a lot more complicated than it is because of all the resistors.
+
+![circuit](img/circuit.jpg)
+
+## The enclosure
+Nearly there. I bought a junction box and installed some 3.5mm jack sockets water-level sensors.
+I also added an output signal to indicate when the pump switches on/off…which I plugged into my Raspberry Pi (but more on that later).
+A mains socket was sliced apart and mounted on to the surface of the enclosure. This is the mains output that will be switched on/off by the water-level, and will power the sump pump.
+
+![enclosure](img/enclosure.jpg)
+
+## Installing the floats
+I wanted a way to install the floats in the sump, but also protect them from getting knocked around. I came up with a solution using a short piece of plastic drainpipe and s drainpipe bracket which I screwed to the side of the sump. The sensor is screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
+
+IMG
 
 ## Buying a new pump
 My previous sump pump had an integrated pump and float. The solution I was coming up had a custom controller that separated out the pump-control logic. This meant buying a new standalone pump that could be switched on and off by my controller. I went with this one - a pretty standard outdoor pond pump.
@@ -71,17 +95,6 @@ A few points that are important:
 * pump is not submersible, but has a spearate hose to suck the water. I didn't feel that strongly about an immersible vs. above-level pump, but I wanted to use the pump in different settings (not just for a sump pump)
 * the pump has a pressure sensor to detect when there is s blockage and cuts out the pump. This is useful if you want to connect the pump to a hosepipe (when you close the hosepipe, the water pressure increases then eventually stops the pump). I've used this a bit in other situations, but for this project the pump just keeps running into the rainwater tank. The other advantage is this pressure sensor will cut out the pump if it runs dry. This is useful in case my pump controller goes rogue or gets stuck.
 
-## The enclosure
-I mocked up the circuit on a prototyping breadboard to check it was working. I added a few LEDs to show when the controller is plugged in and when the lower- and upper-floats are activated. I added an override switch (to force pumping even back to the lower-level).
-
-Once I was happy with everything, I soldered everything up on a circuit board, and put it in an enclosure. I added some 3.5mm sockets for the water-level sensors. I also added an output signal to indicate when the pump switches on/off…which I plugged into my Raspberry Pi (but more on that later).
-
-IMG
-
-## Installing the floats
-I wanted a way to install the floats in the sump, but also protect them from getting knocked around. I came up with a solution using a short piece of plastic drainpipe and s drainpipe bracket which I screwed to the side of the sump. The sensor is screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
-
-IMG
 
 ## Logging the sump activity via Raspberry Pi
 Of course, all simple ideas soon grow into something more complicated. I wanted a way of monitoring the sump pump, particularly to get an idea how often it was switching on/off.
