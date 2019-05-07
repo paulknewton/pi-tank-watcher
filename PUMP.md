@@ -64,7 +64,7 @@ Now we annotate it with the wiring:
 1. The lower-float acts as the memory for the higher float. When the water reaches this lower-float, it primes the circuit. So far, nothing else happens: no pumping, no relay switching. But this step is key because it is what will ensure our pump stays on when it finally does get activated in Step 2. I extended the circuit to switch on a yellow LED at this point, but this is just window dressing.
 1. The water keeps rising. Eventually, it reaches the level of the upper float. The upper float switch closes which activates the output of the right-hand side relay. At this point, I extended the circuit to light a green LED.
 1. The signal of the right-hand relay is used to activate the left-hand side relay. I explained above why I preferred to have a 2nd relay to control the mains voltage and keep it separate from the low-voltage sensors. The relay switches over and enables the main current to flow. The pump jumps into life and starts pumping.
-1. This is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback loop from the lower-float ensures that the signal stays high. Even when the upper float opens again, the relay remains switched and the pump keeps running.
+1. This is where it gets clever. A regular switch would keep pumping until the water drops below the upper level. But not this one. Even as the water-level drops and the upper float opens again, the pump keeps on running. Why? Because the feedback loop (shown in yellow in the schematic) from the lower-float ensures that the signal stays high. Even when the upper float opens again, the yellow wire keeps the relay switched open and the pump keeps running.
 1. The pump continues to work and eventually the water-level drops below the lower-level. At this point, the lower-float switch opens and the feedback loop is broken. The relay is no longer kept open and it returns back to the original position. The right-hand relay closes. This cuts the signal to the left-hand relay, and the mains current stops. The pump switches off and we are back to the starting state.
 
 All we have to do is wait until it rains again, and the entire cycle starts again.
@@ -104,10 +104,10 @@ A few points that are important:
 ## Logging the sump activity via Raspberry Pi
 Of course, all simple ideas soon grow into something more complicated. I wanted a way of monitoring the sump pump, particularly to get an idea how often it was switching on/off.
 
-I decided to add an output signal to the controller which I could connect to a Raspberry Pi. The Raspberry Pi reads the signal via the GPIO, and logs the high/low (on/off) signals. The extension to the circuit is pretty simply. Just remember that the maximum input voltage to an Raspberry Pi is 3.3.V. My circuit was using a 12V supply, so I wired up a simple potential divider with 2 resistors to drop the signal to 3.3V.
+I decided to add an output signal to the controller which I could connect to a Raspberry Pi. The Raspberry Pi reads the signal via the GPIO, and logs the high/low (on/off) signals. The extension to the circuit is pretty simple. Just remember that the maximum input voltage to an Raspberry Pi is 3.3.V. My circuit was using a 12V supply, so I wired up a simple potential divider with 2 resistors to drop the signal to 3.3V.
 
-The code is pretty simply. Just monitor the GPIO PIN (via interrupts to avoid endlessly looping). Whenever there is a change of state, log the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
+The code monitors the GPIO PIN (via interrupts to avoid endlessly looping). Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
 
-The pump has been running for a while now. This is what I have been seeing:
+This is what I have been seeing:
 
 IMG
