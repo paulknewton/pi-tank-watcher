@@ -172,7 +172,7 @@ You need to enter the channel IDs and API keys in the code before executing it (
 ### Python: Numpy, Pandas & Matplotlib
 MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up with. You can do lots of stuff like this:
 
-![fig_sensor.png](sensor/fig_sensor.png)
+![fig_sensor.png](fig_sensor.png)
 
 I was so impressed by the libraries in python than I wrote it up in a separate page [here](GRAPHS.md).
 
