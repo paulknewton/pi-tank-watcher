@@ -25,11 +25,6 @@ This strips out data that exceeds 1 standard deviation from the mean. I was tryi
 
 ![fig_clean_sensor](fig_clean_sensor.png)
 
-### Average tank level during the day
-OK, this doesn't make sense over a long period, but it is useful to see how the level fluctuates over a shorter period - maybe during the summer. I may change this to only plot a sub-set of the data.
-
-![fig_avg_hourly.png](fig_avg_hourly.png)
-
 ### Average tank level per day
 This is a bit more useful - it averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
