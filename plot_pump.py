@@ -1,17 +1,19 @@
 import random
 import datetime
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
-ON = 1
-OFF = 0
+PUMP_ON = 1
+PUMP_OFF = 0
 
 
 def get_event(threshold):
     r = random.random()
     if r >= threshold:
-        return ON
+        return PUMP_ON
     else:
-        return OFF
+        return PUMP_OFF
 
 
 def get_mainly_on():
@@ -22,37 +24,37 @@ def get_mainly_off():
     return get_event(0.8)
 
 
-def gen_data():
+def gen_data(length):
     data = []
 
     ts = datetime.datetime.utcnow()
-    for i in range(0, 10):
+    for i in range(0, length):
         event = get_mainly_on()
-        if (event == ON):
+        if (event == PUMP_ON):
             ts += datetime.timedelta(0, 45 * 60)
             ts += datetime.timedelta(0, random.randint(0, 100 * 60))
             data.append((ts, event))
             print(".")
         else:
-            print("missed pump ON")
+            print("missed pump PUMP_ON")
 
         event = get_mainly_off()
-        if (event == OFF):
+        if (event == PUMP_OFF):
             ts = ts + datetime.timedelta(0, random.randint(0, 10 * 60))
             data.append((ts, event))
             print(".")
         else:
-            print("missed pump OFF")
+            print("missed pump PUMP_OFF")
 
     return data
 
 
 def count_pump_on(data):
-    return len([d for d in data if d[1] == ON])
+    return len([d for d in data if d[1] == PUMP_ON])
 
 
 def count_pump_off(data):
-    return len([d for d in data if d[1] == OFF])
+    return len([d for d in data if d[1] == PUMP_OFF])
 
 
 def find_next_event(data, event_type):
@@ -62,19 +64,19 @@ def find_next_event(data, event_type):
 
 
 def get_on_off_durations(data):
-    data = find_next_event(data, ON)
+    data = find_next_event(data, PUMP_ON)
     if not data:
         return None, None
     on_event = data[0]
     # print("next on: ", on_event)
 
-    data = find_next_event(data[1:], OFF)
+    data = find_next_event(data[1:], PUMP_OFF)
     if not data:
         return None, None
     off_event = data[0]
     # print("next off: ", off_event)
 
-    return data, np.timedelta64(off_event[0] - on_event[0])
+    return data, off_event[0] - on_event[0]
 
 
 def get_all_on_off_durations(data):
@@ -89,15 +91,40 @@ def get_all_on_off_durations(data):
 
 
 if __name__ == "__main__":
-    data = gen_data()
-    for d in data:
-        print("%s, %s" % (d[0].strftime("%y-%m-%d %H:%M:%S UTC"), d[1]))
+    data = gen_data(50)
 
+    # plot raw data
+    x, y = zip(*data)  # * operator to unpack to positional args --> unzip
+    df = pd.DataFrame({"time": x, "pump": y})
+    print(df)
+    df.plot(x="time", y="pump")
+
+    # plot durations
     durations = np.array(get_all_on_off_durations(data))
-    for d in durations:
-        print(str(d))
-    print("mean duration = ", np.mean(durations))
-    #print("std dev = ", np.std(durations))
+    print("durations: ", len(durations))
+    mean = np.mean(durations)
+    print("mean duration = ", mean)
+    df = pd.DataFrame({"pump duration": durations})
+    print(df)
+    df.plot(kind="bar")
 
-    print(np.percentile(durations, 25))
-    print(np.percentile(durations, 75))
+    std_dev = df.loc[:,"pump duration"].std()
+    print("std dev = ", std_dev)
+
+    # drop upper/lower percentiles
+    durations = durations[(durations >= mean - std_dev) & (durations <= mean + std_dev)]
+    print("stripped stddev durations:", len(durations))
+    print("mean duration = ", np.mean(durations))
+    df = pd.DataFrame({"excl. 1 stddev pump duration": durations})
+    print(df)
+    df.plot(kind="bar")
+
+    # drop upper/lower percentiles
+    durations = durations[(durations >= np.percentile(durations, 10)) & (durations <= np.percentile(durations, 90))]
+    print("stripped percentile durations:", len(durations))
+    print("mean duration = ", np.mean(durations))
+    df = pd.DataFrame({"excl. upper/lower percentile pump duration": durations})
+    print(df)
+    df.plot(kind="bar")
+
+    plt.show()
