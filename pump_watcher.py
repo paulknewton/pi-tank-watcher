@@ -1,6 +1,9 @@
 #! /usr/bin/python3
 
 import argparse
+import datetime
+import random
+
 import thing_speak as ts
 
 
@@ -56,3 +59,65 @@ if __name__ == '__main__':
     pump_channel = ts.ThingSpeak(args.thing_speak_api)
 
     pump.listen(pump_channel)
+
+PUMP_ON = 1
+PUMP_OFF = 0
+
+
+def gen_random_samples(length):
+    """
+    Generate random sample data for the pump. Simulate occasional lost readings.
+
+    :param length: number of entries to generate
+    :return tuple of the form (timestamp, sample_id, 0/1)
+    """
+    data = []
+
+    ts = datetime.datetime.utcnow()
+    sample_id = 1
+    while sample_id <= length:
+
+        # get a PUMP_ON event
+        event = gen_mainly_on()
+        if (event == PUMP_ON):
+            # timestamp is assumed to be at least 45 mins since last PUMP_OFF + random(100 minutes)
+            ts += datetime.timedelta(0, 45 * 60)
+            ts += datetime.timedelta(0, random.randint(0, 100 * 60))
+            data.append((ts, sample_id, event))
+            sample_id += 1
+        else:
+            print("missed pump PUMP_ON")
+
+        event = gen_mainly_off()
+        if (event == PUMP_OFF):
+            # pump is assumed to be on for random(10 minutes)
+            ts = ts + datetime.timedelta(0, random.randint(0, 10 * 60))
+            data.append((ts, sample_id, event))
+            sample_id += 1
+        else:
+            print("missed pump PUMP_OFF")
+
+    # events are potentially appended in pairs, meaning we may exceed the requested length
+    return data[:length]
+
+
+def gen_random_event(threshold):
+    """Generate a random event (PUMP_ON or PUMP_OFF). The event is chosen randomly, but the threshold defines the probability. 1 means always off, 0 means always on.
+    :param threshold: the value used to determine the generated event type. Values < threshold = PUMP_OFF; Values >= threshold = PUMP_ON
+    :return:
+    """
+    r = random.random()
+    if r >= threshold:
+        return PUMP_ON
+    else:
+        return PUMP_OFF
+
+
+def gen_mainly_on():
+    """Generate an event - most likely a PUMP_ON event."""
+    return gen_random_event(0.2)
+
+
+def gen_mainly_off():
+    """Generate an event - most likely a PUMP_OFF event."""
+    return gen_random_event(0.8)

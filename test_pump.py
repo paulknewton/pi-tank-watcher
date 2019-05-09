@@ -1,4 +1,5 @@
 import plot_pump as pp
+import pump_watcher as pw
 import pytest
 
 
@@ -43,3 +44,7 @@ def test_durations_missing_on():
             (505, 0), (620, 0),
             (631, 0), (667, 0), (673, 0), (772, 0), (783, 0)]
     assert not pp.get_all_on_off_durations(data)
+
+
+def test_data_generation():
+    assert len(pw.gen_random_samples(100)) == 100

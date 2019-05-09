@@ -1,60 +1,15 @@
-import random
-import datetime
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-
-PUMP_ON = 1
-PUMP_OFF = 0
-
-
-def get_event(threshold):
-    r = random.random()
-    if r >= threshold:
-        return PUMP_ON
-    else:
-        return PUMP_OFF
-
-
-def get_mainly_on():
-    return get_event(0.2)
-
-
-def get_mainly_off():
-    return get_event(0.8)
-
-
-def gen_data(length):
-    data = []
-
-    ts = datetime.datetime.utcnow()
-    for i in range(0, length):
-        event = get_mainly_on()
-        if (event == PUMP_ON):
-            ts += datetime.timedelta(0, 45 * 60)
-            ts += datetime.timedelta(0, random.randint(0, 100 * 60))
-            data.append((ts, event))
-            print(".")
-        else:
-            print("missed pump PUMP_ON")
-
-        event = get_mainly_off()
-        if (event == PUMP_OFF):
-            ts = ts + datetime.timedelta(0, random.randint(0, 10 * 60))
-            data.append((ts, event))
-            print(".")
-        else:
-            print("missed pump PUMP_OFF")
-
-    return data
+import pump_watcher as pw
 
 
 def count_pump_on(data):
-    return len([d for d in data if d[1] == PUMP_ON])
+    return len([d for d in data if d[1] == pw.PUMP_ON])
 
 
 def count_pump_off(data):
-    return len([d for d in data if d[1] == PUMP_OFF])
+    return len([d for d in data if d[1] == pw.PUMP_OFF])
 
 
 def find_next_event(data, event_type):
@@ -64,13 +19,13 @@ def find_next_event(data, event_type):
 
 
 def get_on_off_durations(data):
-    data = find_next_event(data, PUMP_ON)
+    data = find_next_event(data, pw.PUMP_ON)
     if not data:
         return None, None
     on_event = data[0]
     # print("next on: ", on_event)
 
-    data = find_next_event(data[1:], PUMP_OFF)
+    data = find_next_event(data[1:], pw.PUMP_OFF)
     if not data:
         return None, None
     off_event = data[0]
@@ -91,27 +46,31 @@ def get_all_on_off_durations(data):
 
 
 if __name__ == "__main__":
-    data = gen_data(50)
+    data = pw.gen_random_samples(50)
+    np.savetxt("pump.csv", data, fmt=["%s", "%d", "%d"], delimiter=",", header="created_at,entry_id,field1")
+
+    time, sample_id, event = zip(*data)  # * operator to unpack to positional args --> unzip
 
     # plot raw data
-    x, y = zip(*data)  # * operator to unpack to positional args --> unzip
-    df = pd.DataFrame({"time": x, "pump": y})
+    df = pd.DataFrame({"time": time, "pump": event})
     print(df)
     df.plot(x="time", y="pump")
+    plt.savefig("fig_pump.png", bbox_inches='tight')
 
     # plot durations
-    durations = np.array(get_all_on_off_durations(data))
+    durations = np.array(get_all_on_off_durations(list(zip(time, event))))
     print("durations: ", len(durations))
     mean = np.mean(durations)
     print("mean duration = ", mean)
     df = pd.DataFrame({"pump duration": durations})
     print(df)
     df.plot(kind="bar")
+    plt.savefig("fig_pump_durations.png", bbox_inches='tight')
 
     std_dev = df.loc[:,"pump duration"].std()
     print("std dev = ", std_dev)
 
-    # drop upper/lower percentiles
+    # drop 1 std dev
     durations = durations[(durations >= mean - std_dev) & (durations <= mean + std_dev)]
     print("stripped stddev durations:", len(durations))
     print("mean duration = ", np.mean(durations))
