@@ -30,7 +30,7 @@ class SumpPump:
         status = GPIO.input(pin)
         print("Change status on pin %d --> %s" % (pin, status))
         for l in loggers:
-            if l: # ignore empty loggers
+            if l:  # ignore empty loggers
                 l.log([status])
 
     def off(channel):
@@ -44,6 +44,11 @@ class SumpPump:
         print("Registering listener")
         self.loggers.append(pump_channel)
         GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
+
+
+class ConsoleLogger:
+    def log(self, event):
+        print("Event: %s" % event)
 
 
 if __name__ == '__main__':
@@ -61,8 +66,11 @@ if __name__ == '__main__':
     pump = SumpPump(args.gpio_pin)
     pump_channel = None
     if args.thing_speak_api:
-        print("add ts channel")
+        print("adding ThingSpeak channel (API key %s" %args.thing_speak_api)
         pump_channel = ts.ThingSpeak(args.thing_speak_api)
+    else:
+        print("adding console channel")
+        pump_channel = ConsoleLogger()
 
     # while True:
     #    print(GPIO.input(args.gpio_pin))
