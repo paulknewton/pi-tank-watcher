@@ -15,50 +15,65 @@ class SumpPump:
         self.switch_pin = on_pin
 
         # GPIO Mode (BOARD / BCM)
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        GPIO.setmode(GPIO.BOARD)
+        #GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(on_pin, GPIO.IN)
 
-    @staticmethod
-    def on(channel):
+    def event(self, pin):
         """Switch on. Log event to the channel"""
-        print("switch on")
-        channel.log([1])
+        status = GPIO.input(pin)
+        print("change status on pin %d --> %s" % (pin, status))
+        if self.log:
+            self.log.log([status])
 
-    @staticmethod
     def off(channel):
         """Switch off. Log event to the channel"""
         print("switch off")
-        channel.log([0])
+        if channel:
+            channel.log([0])
 
-    def listen(self, channel):
+    def listen(self, pump_channel):
         """Start listening to the pump"""
         print("starting listener")
-        try:
-            GPIO.wait_for_edge(self.switch_pin, GPIO.FALLING)
-            self.on(channel)
+        self.log = pump_channel
+        GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
+        #GPIO.add_event_detect(self.switch_pin, GPIO.FALLING, self.off)
+        #try:
+            #GPIO.wait_for_edge(self.switch_pin, GPIO.RISING)
+            #print("on")
+            #self.on(channel)
 
-            GPIO.wait_for_edge(self.switch_pin, GPIO.RISING)
-            self.off(channel)
+            #GPIO.wait_for_edge(self.switch_pin, GPIO.FALLING)
+            #self.off(channel)
 
-        except KeyboardInterrupt:
-            GPIO.cleanup()
+        #except KeyboardInterrupt:
+        input("Hit any key to exit")
+        GPIO.cleanup()
 
 
 if __name__ == '__main__':
     # read command-line args
     parser = argparse.ArgumentParser(
         description="Monitor the on/off switching of a sump pump")
-    parser.add_argument("thing_speak_api", help="API key to write new sensor readings to thingspeak.com channel")
     parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
+    parser.add_argument("--thingspeak", dest="thing_speak_api", help="API key to write new sensor readings to thingspeak.com channel")
     args = parser.parse_args()
     print(args)
 
     import RPi.GPIO as GPIO
 
     pump = SumpPump(args.gpio_pin)
-    pump_channel = ts.ThingSpeak(args.thing_speak_api)
+    pump_channel = None
+    if args.thing_speak_api:
+        print("add ts channel")
+        pump_channel = ts.ThingSpeak(args.thing_speak_api)
 
+    #while True:
+    #    print(GPIO.input(args.gpio_pin))
+        
     pump.listen(pump_channel)
+
+
 
 PUMP_ON = 1
 PUMP_OFF = 0
