@@ -4,7 +4,7 @@ import argparse
 import datetime
 import random
 
-import thing_speak as ts
+import loggers
 
 PUMP_ON = 1
 PUMP_OFF = 0
@@ -13,73 +13,38 @@ PUMP_OFF = 0
 class SumpPump:
     """Monitor of a sump pump. Logs when pump is activated/de-activated"""
 
-    def __init__(self, on_pin):
-        """Setup a pump on the specific GPIO pin"""
+    def __init__(self, on_pin, test_mode=False):
+        """Setup a pump watcher on the specific GPIO pin"""
         self.switch_pin = on_pin
+        self.test_mode = test_mode
 
-        # GPIO Mode (BOARD / BCM)
-        GPIO.setmode(GPIO.BOARD)
-        # GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.setup(on_pin, GPIO.IN)
+        if not test_mode:
+            # GPIO Mode (BOARD / BCM)
+            GPIO.setmode(GPIO.BOARD)
+            # GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            GPIO.setup(on_pin, GPIO.IN)
 
         # list of loggers (to allow >1)
-        loggers = []
+        self.loggers = []
 
     def event(self, pin):
-        """Switch on. Log event to the channel"""
-        status = GPIO.input(pin)
+        """Switch on. Log event to the channel (1=pump on; 0 = pump_off; -1=undefined"""
+        status = -1
+        if not self.test_mode:
+            status = GPIO.input(pin)
         print("Change status on pin %d --> %s" % (pin, status))
-        for l in loggers:
+
+        for l in self.loggers:
             if l:  # ignore empty loggers
                 l.log([status])
 
-    def off(channel):
-        """Switch off. Log event to the channel"""
-        print("switch off")
-        if channel:
-            channel.log([0])
-
-    def listen(self, pump_channel):
+    def add_listener(self, logger):
         """Start listening to the pump"""
         print("Registering listener")
-        self.loggers.append(pump_channel)
-        GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
+        self.loggers.append(logger)
 
-
-class ConsoleLogger:
-    def log(self, event):
-        print("Event: %s" % event)
-
-
-if __name__ == '__main__':
-    # read command-line args
-    parser = argparse.ArgumentParser(
-        description="Monitor the on/off switching of a sump pump")
-    parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
-    parser.add_argument("--thingspeak", dest="thing_speak_api",
-                        help="API key to write new sensor readings to thingspeak.com channel")
-    args = parser.parse_args()
-    print(args)
-
-    import RPi.GPIO as GPIO
-
-    pump = SumpPump(args.gpio_pin)
-    pump_channel = None
-    if args.thing_speak_api:
-        print("adding ThingSpeak channel (API key %s" %args.thing_speak_api)
-        pump_channel = ts.ThingSpeak(args.thing_speak_api)
-    else:
-        print("adding console channel")
-        pump_channel = ConsoleLogger()
-
-    # while True:
-    #    print(GPIO.input(args.gpio_pin))
-
-    pump.listen(pump_channel)
-
-    # except KeyboardInterrupt:
-    input("Hit any key to exit")
-    GPIO.cleanup()
+        if not self.test_mode:
+            GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
 
 
 def gen_random_samples(length):
@@ -139,3 +104,33 @@ def gen_mainly_on():
 def gen_mainly_off():
     """Generate an event - most likely a PUMP_OFF event."""
     return gen_random_event(0.8)
+
+
+if __name__ == '__main__':
+    # read command-line args
+    parser = argparse.ArgumentParser(
+        description="Monitor the on/off switching of a sump pump")
+    parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
+    parser.add_argument("--thingspeak", dest="thing_speak_api",
+                        help="API key to write new sensor readings to thingspeak.com channel")
+    args = parser.parse_args()
+    print(args)
+
+    import RPi.GPIO as GPIO
+
+    pump = SumpPump(args.gpio_pin)
+    pump_channel = None
+
+    # add a logger to ThingSpeak if defined, otherwise print to console
+    if args.thing_speak_api:
+        # print("adding ThingSpeak channel (API key %s" % args.thing_speak_api)
+        pump_channel = loggers.ThingSpeak(args.thing_speak_api)
+    else:
+        # print("adding console channel")
+        pump_channel = ConsoleLogger()
+
+    pump.add_listener(pump_channel)
+
+    # prevents script from exiting
+    input("Hit any key to exit")
+    GPIO.cleanup()

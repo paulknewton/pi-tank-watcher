@@ -3,3 +3,4 @@ lcd/adafruit_lcd_example.py
 addAPIs.sh
 .DS_Store
 build-graphs.sh
+__pycache__

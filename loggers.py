@@ -1,5 +1,6 @@
 from urllib.request import urlopen
 
+
 class ThingSpeak:
     """ThingSpeak channel used to log pump on/off events"""
 
@@ -18,8 +19,9 @@ class ThingSpeak:
         """
         Log the event to the ThingSpeak channel (timestamp is inferred by ThingSpeak)
 
-        Args:
+        :arg
             event - a list of fields to log. Can be empty.
+        :return url used to log to ThingSpeak (includes API key and list of fields)
         """
 
         url = "https://api.thingspeak.com/update?api_key=" + self.api_key
@@ -29,3 +31,8 @@ class ThingSpeak:
             urlopen(url)
 
         return url
+
+
+class ConsoleLogger:
+    def log(self, event):
+        print("Event: %s" % event)

@@ -1,6 +1,6 @@
 import pytest
 import tank_watcher
-import thing_speak as ts
+import loggers as ts
 
 
 class DummySensor:

@@ -2,7 +2,7 @@
 
 import statistics
 import time
-import thing_speak as ts
+import loggers as ts
 import argparse
 
 

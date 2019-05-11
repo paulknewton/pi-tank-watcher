@@ -48,3 +48,24 @@ def test_durations_missing_on():
 
 def test_data_generation():
     assert len(pw.gen_random_samples(100)) == 100
+
+
+def test_callbacks():
+    pump = pw.SumpPump(9, test_mode=True)   # setup pump on PIN 9
+
+    # dummy logger to record events
+    class DummyLogger:
+        def __init__(self):
+            self.events = []
+
+        def log(self, event):
+            self.events.append(event)
+
+    test_logger = DummyLogger()
+    pump.add_listener(test_logger)
+
+    # simulate an event on PIN 9
+    pump.event(9)
+
+    assert len(test_logger.events) == 1     # check only 1 event
+    assert test_logger.events[0] == [-1]    # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used
