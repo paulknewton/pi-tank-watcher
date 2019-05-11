@@ -52,7 +52,7 @@ def gen_random_samples(length):
     Generate random sample data for the pump. Simulate occasional lost readings.
 
     :param length: number of entries to generate
-    :return tuple of the form (timestamp, sample_id, 0/1)
+    :return list of lists of the form [[timestamp, sample_id, 0/1]...]
     """
     data = []
 
@@ -64,21 +64,22 @@ def gen_random_samples(length):
         event = gen_mainly_on()
         if (event == PUMP_ON):
             # timestamp is assumed to be at least 45 mins since last PUMP_OFF + random(100 minutes)
-            ts += datetime.timedelta(0, 45 * 60)
-            ts += datetime.timedelta(0, random.randint(0, 100 * 60))
-            data.append((ts, sample_id, event))
+            ts += datetime.timedelta(0, 45 * 60) + datetime.timedelta(0, random.randint(0, 100 * 60))
+            data.append([ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event])
             sample_id += 1
         else:
-            print("missed pump PUMP_ON")
+            #print("missed pump PUMP_ON")
+            pass
 
         event = gen_mainly_off()
         if (event == PUMP_OFF):
             # pump is assumed to be on for random(10 minutes)
             ts = ts + datetime.timedelta(0, random.randint(0, 10 * 60))
-            data.append((ts, sample_id, event))
+            data.append((ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event))
             sample_id += 1
         else:
-            print("missed pump PUMP_OFF")
+            #print("missed pump PUMP_OFF")
+            pass
 
     # events are potentially appended in pairs, meaning we may exceed the requested length
     return data[:length]
