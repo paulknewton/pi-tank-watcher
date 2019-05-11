@@ -112,10 +112,11 @@ if __name__ == "__main__":
     parser.add_argument('--create', dest="create_data", action="store_true", default=False, help="create test data")
     args = parser.parse_args()
 
+    args.create_data = True
     if args.create_data:
         print("Creating test data...")
         data = pw.gen_random_samples(40)
-        with open("pump.csv", "w", newline='') as f:
+        with open(args.filename, "w", newline='') as f:
             writer = csv.writer(f)
             header=[["created_at", "entry_id", "field1"]]
             writer.writerows(header)
