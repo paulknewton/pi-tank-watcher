@@ -61,11 +61,25 @@ def test_callbacks():
         def log(self, event):
             self.events.append(event)
 
-    test_logger = DummyLogger()
-    pump.add_listener(test_logger)
+    test_logger1 = DummyLogger()
+    pump.add_listener(test_logger1)
 
     # simulate an event on PIN 9
     pump.event(9)
+    assert len(test_logger1.events) == 1     # check only 1 event
+    assert test_logger1.events == [[-1]]    # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used
 
-    assert len(test_logger.events) == 1     # check only 1 event
-    assert test_logger.events[0] == [-1]    # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used
+    # add 2 more listeners
+    test_logger2 = DummyLogger()
+    pump.add_listener(test_logger2)
+    test_logger3 = DummyLogger()
+    pump.add_listener(test_logger3)
+
+    # simulate an event on PIN 9
+    pump.event(9)
+    assert len(test_logger1.events) == 2     # check 2 events
+    assert test_logger1.events == [[-1], [-1]]
+    assert len(test_logger2.events) == 1
+    assert test_logger2.events == [[-1]]
+    assert len(test_logger3.events) == 1
+    assert test_logger3.events == [[-1]]

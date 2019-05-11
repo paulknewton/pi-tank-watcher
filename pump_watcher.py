@@ -39,7 +39,7 @@ class SumpPump:
                 l.log([status])
 
     def add_listener(self, logger):
-        """Start listening to the pump"""
+        """Add a listener to be called when the pump is enabled/disabled. Can add multiple listeners to be called in sequence."""
         print("Registering listener")
         self.loggers.append(logger)
 
