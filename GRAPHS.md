@@ -11,6 +11,7 @@ The programs take a CSV file containing data readings (download these from your 
 
 Here are the graphs it produces. These are automatically refreshed on a regular basis and uploaded to github. So it is a kind of dashboard (not real-time, but at least every day):
 
+---
 ## Sensor graphs
 ### Raw data with some basic mean/std deviation
 This is the raw data, but complemented with some other basic lines:
@@ -25,22 +26,29 @@ This strips out data that exceeds 1 standard deviation from the mean. I was tryi
 
 ![fig_clean_sensor](fig_clean_sensor.png)
 
-### Average tank level during the day
-OK, this doesn't make sense over a long period, but it is useful to see how the level fluctuates over a shorter period - maybe during the summer. I may change this to only plot a sub-set of the data.
-
-![fig_avg_hourly.png](fig_avg_hourly.png)
-
 ### Average tank level per day
 This is a bit more useful - it averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
 ![fig_avg_daily.png](fig_avg_daily.png)
 
+---
+## Sump Pump graphs
+### Raw data
+This is a plot of the raw sump data ON/OFF activity:
+![fig_pump](fig_pump.png)
+
+### Pump running durations
+This is a plot of the individual durations when the pump is running:
+![fig_pump_durations](fig_pump_durations.png)
+
+
+---
 ## Weather graphs
-# Weather data correlations
+### Weather data correlations
 These graphs plot the different measurements (pressure, humidity, time, rainfall) against either to determine any obvious correlations.
 This is done in the weather/plot_data.py code by iterating over all the combinations and generating a grid of subplots. This is too large to display here, so view it [here](fig_weather.png).
 
-# Humidity vs. Temperature
+### Humidity vs. Temperature
 What do the graphs show (apart from the fact that weather patterns are complex and my analysis won't reveal very much)? Well, we can see that humidity and temperature seem inversely proportional - higher temperatures show lower humidity. Here is the specific graph:
 
 ![fig_humidity_temp.png](img/fig_humidity_temp.png)
