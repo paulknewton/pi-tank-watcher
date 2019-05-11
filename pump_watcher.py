@@ -6,6 +6,9 @@ import random
 
 import thing_speak as ts
 
+PUMP_ON = 1
+PUMP_OFF = 0
+
 
 class SumpPump:
     """Monitor of a sump pump. Logs when pump is activated/de-activated"""
@@ -16,15 +19,19 @@ class SumpPump:
 
         # GPIO Mode (BOARD / BCM)
         GPIO.setmode(GPIO.BOARD)
-        #GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        # GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(on_pin, GPIO.IN)
+
+        # list of loggers (to allow >1)
+        loggers = []
 
     def event(self, pin):
         """Switch on. Log event to the channel"""
         status = GPIO.input(pin)
-        print("change status on pin %d --> %s" % (pin, status))
-        if self.log:
-            self.log.log([status])
+        print("Change status on pin %d --> %s" % (pin, status))
+        for l in loggers:
+            if l: # ignore empty loggers
+                l.log([status])
 
     def off(channel):
         """Switch off. Log event to the channel"""
@@ -34,21 +41,9 @@ class SumpPump:
 
     def listen(self, pump_channel):
         """Start listening to the pump"""
-        print("starting listener")
-        self.log = pump_channel
+        print("Registering listener")
+        self.loggers.append(pump_channel)
         GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
-        #GPIO.add_event_detect(self.switch_pin, GPIO.FALLING, self.off)
-        #try:
-            #GPIO.wait_for_edge(self.switch_pin, GPIO.RISING)
-            #print("on")
-            #self.on(channel)
-
-            #GPIO.wait_for_edge(self.switch_pin, GPIO.FALLING)
-            #self.off(channel)
-
-        #except KeyboardInterrupt:
-        input("Hit any key to exit")
-        GPIO.cleanup()
 
 
 if __name__ == '__main__':
@@ -56,7 +51,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Monitor the on/off switching of a sump pump")
     parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
-    parser.add_argument("--thingspeak", dest="thing_speak_api", help="API key to write new sensor readings to thingspeak.com channel")
+    parser.add_argument("--thingspeak", dest="thing_speak_api",
+                        help="API key to write new sensor readings to thingspeak.com channel")
     args = parser.parse_args()
     print(args)
 
@@ -68,15 +64,14 @@ if __name__ == '__main__':
         print("add ts channel")
         pump_channel = ts.ThingSpeak(args.thing_speak_api)
 
-    #while True:
+    # while True:
     #    print(GPIO.input(args.gpio_pin))
-        
+
     pump.listen(pump_channel)
 
-
-
-PUMP_ON = 1
-PUMP_OFF = 0
+    # except KeyboardInterrupt:
+    input("Hit any key to exit")
+    GPIO.cleanup()
 
 
 def gen_random_samples(length):
