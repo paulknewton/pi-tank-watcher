@@ -104,6 +104,10 @@ I decided to add an output signal to the controller which I could connect to a R
 
 The code monitors the GPIO PIN (via interrupts to avoid endlessly looping). Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
 
-This is what I have been seeing:
+This is the pump activity I have been seeing:
 
-IMG
+![fig_pump](fig_pump.png)
+
+If you measure only the periods when the pump is running (time from pump ON to pump OFF):
+
+![fig_pump_durations](fig_pump_durations.png)
