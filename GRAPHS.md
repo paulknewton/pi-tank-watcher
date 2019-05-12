@@ -4,8 +4,9 @@ All of the sensor sampling and data upload is written in Python. But Python also
 
 ## What does it do?
 There are 2 programs:
-* [sensor/plot_data.py](sensor/plot_data.py) - generate graphs for the water level tank sensor
-* [weather/plot_data.py](weather/plot_data.py) - generate graphs for the weather data
+* [plot_waterdepth.py](plot_waterdepth.py) - generate graphs for the water level tank sensor
+* [plot_weather.py](plot_weather.py) - generate graphs for the weather data
+* [plot_pump.py](plot_pump.py) - generate graphs for the weather data
 
 The programs take a CSV file containing data readings (download these from your ThingSpeak channel) then read the data into data structures (numpy arrays or pandas series/dataframes). The code then uses the various python libraries to calculate means, standard deviations and group the data in different ways to get some kind of insights. All of the data is then turned into some nice-looking graphs with MATPLOTLIB. They show how powerful the libraries are, and how you can quickly get some quite complex data calculations without too much effort.
 
@@ -22,12 +23,12 @@ This is the raw data, but complemented with some other basic lines:
 ![fig_sensor.png](fig_sensor.png)
 
 ### Data cleaned by dropping readings > 1 std dev
-This strips out data that exceeds 1 standard deviation from the mean. I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank. But as you can see, the data still fluctuates so much, as to make the readings almost unusable.
+This strips out data that exceeds 1 standard deviation from the mean. I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank.
 
 ![fig_clean_sensor](fig_clean_sensor.png)
 
 ### Average tank level per day
-This is a bit more useful - it averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
+This graph averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
 ![fig_avg_daily.png](fig_avg_daily.png)
 
@@ -45,7 +46,7 @@ This is a plot of the individual durations when the pump is running:
 ---
 ## Weather graphs
 ### Weather data correlations
-These graphs plot the different measurements (pressure, humidity, time, rainfall) against either to determine any obvious correlations.
+This graph plots the different measurements (pressure, humidity, time, rainfall) against each other to determine any obvious correlations.
 This is done in the weather/plot_data.py code by iterating over all the combinations and generating a grid of subplots. This is too large to display here, so view it [here](fig_weather.png).
 
 ### Humidity vs. Temperature
@@ -70,18 +71,14 @@ pip install numpy pandas matplotlib
 Download the data files from your ThingSpeak.com channel (via their website). You could automate this if you like. Remember to choose the CSV format (we could have taken the JSON or XML formats, but CSV can be opened in Excel more easily).
 Both progams run in the same way, providing the data file as a parameter:
 ```
-cd sensor
-python3 plot_data.py your_sensor_data.csv
-```
-or
-```
-cd weather
-python3 plot_data.py your_weather_data.csv
+python3 plot_waterdepth.py your_sensor_data.csv
+python3 plot_weather.py your_weather_data.csv
+python3 plot_pump.py your_pump_data.csv
 ```
 
-The file format is a simple CSV file of the available data. The code assumes the data matches the channels that were setup in the main README. If the list of columns is different, you will need to change the code slightly. The program will read the data and output a bunch of graphs. These are saved as fig_XXX.png files in the working directory.
-You can also get the program display the graphs as they are calculated:
+The file formats from ThingSpeak are simple CSV files of the available data. The code assumes the data matches the channels that were setup in the main README. If the list of columns is different, you will need to change the code slightly. The program will read the data and output a bunch of graphs. These are saved as fig_XXX.png files in the working directory.
+You can also get the program to display the graphs as they are calculated:
 
 ```
-python3 ./plot_data.py --show your_data.csv
+python3 plot_waterdepth.py --show your_data.csv
 ```
