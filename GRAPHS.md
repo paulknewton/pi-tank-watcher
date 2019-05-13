@@ -20,27 +20,27 @@ This is the raw data, but complemented with some other basic lines:
 * smooth water readings calcualted using a rolling mean function
 * standard deviation (+/- 1 std dev)
 
-![fig_sensor.png](fig_sensor.png)
+![fig_sensor.png](graphs/fig_sensor.png)
 
 ### Data cleaned by dropping readings > 1 std dev
 This strips out data that exceeds 1 standard deviation from the mean. I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank.
 
-![fig_clean_sensor](fig_clean_sensor.png)
+![fig_clean_sensor](graphs/fig_clean_sensor.png)
 
 ### Average tank level per day
 This graph averages the readings for a given day and plots this on a timeline, day-by-day for the entire data set. This shows how the water level fluctuates over the life-time of the project (up to the maximum 8000 data points allowed by ThingSpeak!)
 
-![fig_avg_daily.png](fig_avg_daily.png)
+![fig_avg_daily.png](graphs/fig_avg_daily.png)
 
 ---
 ## Sump Pump graphs
 ### Raw data
 This is a plot of the raw sump data ON/OFF activity:
-![fig_pump](fig_pump.png)
+![fig_pump](graphs/fig_pump.png)
 
 ### Pump running durations
 This is a plot of the individual durations when the pump is running:
-![fig_pump_durations](fig_pump_durations.png)
+![fig_pump_durations](graphs/fig_pump_durations.png)
 
 
 ---

@@ -69,7 +69,7 @@ def build_graphs(filename, show_graphs=False):
     df = pd.DataFrame({"time": time, "pump": event})
     #print(df)
     df.plot(x="time", y="pump")
-    plt.savefig("fig_pump.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_pump.png", bbox_inches='tight')
 
     # plot durations
     durations = np.array(get_all_on_off_durations(list(zip(time, event))))
@@ -79,7 +79,7 @@ def build_graphs(filename, show_graphs=False):
     df = pd.DataFrame({"pump duration": durations})
     #print(df)
     df.plot(kind="bar")
-    plt.savefig("fig_pump_durations.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
 
     std_dev = df.loc[:, "pump duration"].std()
     print("std dev = ", std_dev)

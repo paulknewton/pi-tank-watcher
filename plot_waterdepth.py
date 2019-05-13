@@ -77,7 +77,7 @@ def build_graphs(data, show_graphs=False):
     plt.ylabel("depth")
     plt.title("Water depth readings")
     plt.legend()
-    plt.savefig("fig_sensor.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_sensor.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
     plt.close()
@@ -92,7 +92,7 @@ def build_graphs(data, show_graphs=False):
     plt.legend()
     plt.ylim(max(np.amin(avg_series) - (np.amin(avg_series) * 0.1), 0),
              np.amax(avg_series) + (np.amax(avg_series) * 0.1))
-    plt.savefig("fig_avg_hourly.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_avg_hourly.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
     plt.close()
@@ -108,7 +108,7 @@ def build_graphs(data, show_graphs=False):
     ymax = df["depth"].max()
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
-    plt.savefig("fig_avg_daily.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_avg_daily.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
     plt.close()
@@ -124,7 +124,7 @@ def build_graphs(data, show_graphs=False):
     ymax = df["depth"].max()
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
-    plt.savefig("fig_clean_sensor.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
     plt.close()

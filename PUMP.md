@@ -106,8 +106,8 @@ The code monitors the GPIO PIN (via interrupts to avoid endlessly looping). When
 
 This is the pump activity I have been seeing:
 
-![fig_pump](fig_pump.png)
+![fig_pump](graphs/fig_pump.png)
 
 If you measure only the periods when the pump is running (time from pump ON to pump OFF):
 
-![fig_pump_durations](fig_pump_durations.png)
+![fig_pump_durations](graphs/fig_pump_durations.png)

@@ -60,7 +60,7 @@ def build_graphs(filename, show_graphs=False):
         ax.set_xlabel(label_x)
         ax.set_ylabel(label_y)
 
-    plt.savefig("fig_weather.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_weather.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
     plt.close()

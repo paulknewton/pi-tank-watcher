@@ -172,7 +172,7 @@ You need to enter the channel IDs and API keys in the code before executing it (
 ### Python: Numpy, Pandas & Matplotlib
 MATLAB seems like a really powerful framework. My old PhD colleagues were all using it. But I like open-source tools, and I like tools that fit in with the skills I already have. Python has long been a favourite of scientists so I thought I would experiment with the various python libraries to see what I could come up with. You can do lots of stuff like this:
 
-![fig_sensor.png](fig_sensor.png)
+![fig_sensor.png](graphs/fig_sensor.png)
 
 I was so impressed by the libraries in python than I wrote it up in a separate page [here](GRAPHS.md).
 
@@ -210,12 +210,12 @@ The sensor has been running for some time now (4 months?), so I thought I would 
 * some generated graphs
     * GRAPHS.md
     * plot_waterdepth.py - plot graphs of the water level
-    * fig_avg_daily.png
-    * fig_avg_hourly.png
-    * fig_clean_sensor.png
-    * fig_sensor.png
+    * graphs/fig_avg_daily.png
+    * graphs/fig_avg_hourly.png
+    * graphs/fig_clean_sensor.png
+    * graphs/fig_sensor.png
     * plot_weather.py - plot graphs of the weather
-    * fig_weather.png
+    * graphs/fig_weather.png
 * files for the sump pump monitor
     * pump_watcher.py - record pump on/off and log these to ThingSpeak
     * test_pump.py - PyTest unit tests for the pump monitor
