@@ -5,6 +5,8 @@ import csv
 from numpy import genfromtxt
 from datetime import datetime
 import argparse
+import matplotlib
+import seaborn as sns
 
 
 def count_pump_on(data):
@@ -57,8 +59,8 @@ def build_graphs(filename, show_graphs=False):
     print(data.dtype.names)
 
     print("Generating graphs...")
+    sns.set(style="darkgrid")
 
-    import matplotlib
     if not show_graphs:
         matplotlib.use("Agg")  # allows figures to be generated on headless server
     import matplotlib.pyplot as plt

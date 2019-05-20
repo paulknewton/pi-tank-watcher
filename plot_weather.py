@@ -1,6 +1,8 @@
 import argparse
 import itertools
 import math
+import matplotlib
+import seaborn as sns
 from datetime import datetime
 
 from numpy import genfromtxt
@@ -20,11 +22,11 @@ def build_graphs(filename, show_graphs=False):
     # ------------- figures -------------
     # -----------------------------------
 
-    import matplotlib
     if not show_graphs:
         matplotlib.use("Agg")  # allows figures to be generated on headless server
 
     import matplotlib.pyplot as plt
+    sns.set(style="darkgrid")
     font = {'size': 6}
     matplotlib.rc('font', **font)
 

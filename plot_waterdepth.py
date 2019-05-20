@@ -1,6 +1,8 @@
 import argparse
 import csv
 from datetime import datetime
+import matplotlib
+import seaborn as sns
 
 import dateutil.tz
 import numpy as np
@@ -47,12 +49,11 @@ def build_graphs(data, show_graphs=False):
     # ------------- figures -------------
     # -----------------------------------
 
-
     if not show_graphs:
-        import matplotlib
         matplotlib.use("Agg")  # allows figures to be generated on headless server
 
     import matplotlib.pyplot as plt
+    sns.set(style="darkgrid")
 
     #from pandas.plotting import register_matplotlib_converters
     #register_matplotlib_converters()
