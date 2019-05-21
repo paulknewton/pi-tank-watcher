@@ -55,8 +55,8 @@ def build_graphs(data, show_graphs=False):
     import matplotlib.pyplot as plt
     sns.set(style="darkgrid")
 
-    #from pandas.plotting import register_matplotlib_converters
-    #register_matplotlib_converters()
+    # from pandas.plotting import register_matplotlib_converters
+    # register_matplotlib_converters()
 
     # raw data - vanilla matplotlib
     plt.plot(x, y, label="raw")
@@ -79,9 +79,10 @@ def build_graphs(data, show_graphs=False):
     plt.title("Water depth readings")
     plt.legend()
     plt.savefig("graphs/fig_sensor.png", bbox_inches='tight')
-    if show_graphs:
-        plt.show()
-    plt.close()
+
+    # why cannot remove this?
+    #if show_graphs:
+    #    plt.show()
 
     # avg per hour - using pandas DF
     df = pd.DataFrame({"time": x, "depth": y})
@@ -94,9 +95,6 @@ def build_graphs(data, show_graphs=False):
     plt.ylim(max(np.amin(avg_series) - (np.amin(avg_series) * 0.1), 0),
              np.amax(avg_series) + (np.amax(avg_series) * 0.1))
     plt.savefig("graphs/fig_avg_hourly.png", bbox_inches='tight')
-    if show_graphs:
-        plt.show()
-    plt.close()
 
     # avg per day - using pandas DF re-indexing (and pandas plot wrapper)
     df = pd.DataFrame({"time": x, "depth": y})
@@ -110,25 +108,56 @@ def build_graphs(data, show_graphs=False):
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
     plt.savefig("graphs/fig_avg_daily.png", bbox_inches='tight')
-    if show_graphs:
-        plt.show()
-    plt.close()
 
     # drop values outside 1 std dev - using pandas DF
     df = pd.DataFrame({"time": x, "depth": y})
     df.set_index("time", inplace=True)
-    df = df[df["depth"].between(mean - std, mean + std)]
+    df = drop_1std(df)
     ax = df.plot()
     ax.set_xlabel("date")
     ax.set_ylabel("depth")
-    plt.title("Cleaned sensor values (within 1 std deviation)")
+    plt.title("Cleaned sensor values (mean +/- 1 std)")
     ymax = df["depth"].max()
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
+
     plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
+
+    # drop values outside 1 rolling std dev - using pandas DF
+    df = pd.DataFrame({"time": x, "depth": y})
+    df.set_index("time", inplace=True)
+    df = drop_1_rolling_std(df)
+    ax = df.plot()
+    ax.set_xlabel("date")
+    ax.set_ylabel("depth")
+    plt.title("Cleaned sensor values (rolling mean +/- 1 rolling std)")
+    ymax = df["depth"].max()
+    ymin = df["depth"].min()
+    plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
+
+    plt.savefig("graphs/fig_clean_sensor2.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
+
     plt.close()
+
+
+def drop_1std(df):
+    mean = df.mean()["depth"]
+    std = df.std()["depth"]
+    return df[df["depth"].between(mean - std, mean + std)]
+
+
+def drop_1_rolling_std(df):
+    win_size = 50
+    rolling_mean = df.rolling(window=win_size).mean()
+    rolling_std = df.rolling(window=win_size).std()
+
+    #print(rolling_mean)
+    #print(rolling_std)
+
+    return df[
+        df["depth"].between(rolling_mean["depth"] - rolling_std["depth"], rolling_mean["depth"] + rolling_std["depth"])]
 
 
 if __name__ == "__main__":
