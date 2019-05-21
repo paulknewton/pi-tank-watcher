@@ -2,6 +2,7 @@ import argparse
 import csv
 from datetime import datetime
 import matplotlib
+import matplotlib.pyplot as plt
 import seaborn as sns
 
 import dateutil.tz
@@ -52,12 +53,13 @@ def build_graphs(data, show_graphs=False):
     if not show_graphs:
         matplotlib.use("Agg")  # allows figures to be generated on headless server
 
-    import matplotlib.pyplot as plt
+    # import matplotlib.pyplot as plt
     sns.set(style="darkgrid")
 
     # from pandas.plotting import register_matplotlib_converters
     # register_matplotlib_converters()
 
+    # ---------- FIGURE ----------
     # raw data - vanilla matplotlib
     plt.plot(x, y, label="raw")
 
@@ -74,68 +76,59 @@ def build_graphs(data, show_graphs=False):
     # fig, ax = plt.subplots()#ystart, yend = ax.get_ylim()
     # plt.yticks(np.arange(0, yend, 1))
     plt.xticks(rotation='vertical')
-    plt.xlabel("date")
-    plt.ylabel("depth")
-    plt.title("Water depth readings")
-    plt.legend()
+    init_plot("Water depth readings", "date", "depth")
     plt.savefig("graphs/fig_sensor.png", bbox_inches='tight')
 
     # why cannot remove this?
     if show_graphs:
         plt.show()
 
+    # ---------- FIGURE ----------
     # avg per hour - using pandas DF
-    df = pd.DataFrame({"time": x, "depth": y})
-    avg_series = df.groupby(df["time"].dt.hour)["depth"].aggregate(np.mean)  # returns a series
-    plt.bar(avg_series.index, avg_series, label="avg / hr", width=0.6)
-    plt.xlabel("hour")
-    plt.ylabel("depth")
-    plt.title("Average water depth during the day")
-    plt.legend()
-    plt.ylim(max(np.amin(avg_series) - (np.amin(avg_series) * 0.1), 0),
-             np.amax(avg_series) + (np.amax(avg_series) * 0.1))
-    plt.savefig("graphs/fig_avg_hourly.png", bbox_inches='tight')
+    #df = pd.DataFrame({"time": x, "depth": y})
+    #avg_series = df.groupby(df["time"].dt.hour)["depth"].aggregate(np.mean)  # returns a series
+    #plt.bar(avg_series.index, avg_series, label="avg / hr", width=0.6)
+    #init_plot("Average water depth during the day", "hour", "depth")
+    #plt.ylim(max(np.amin(avg_series) - (np.amin(avg_series) * 0.1), 0),
+    #         np.amax(avg_series) + (np.amax(avg_series) * 0.1))
+    #plt.savefig("graphs/fig_avg_hourly.png", bbox_inches='tight')
 
-    # avg per day - using pandas DF re-indexing (and pandas plot wrapper)
+    # ---------- FIGURE ----------
+    # drop values outside 1 std dev - using pandas DF
+    #df = pd.DataFrame({"time": x, "depth": y})
+    #df.set_index("time", inplace=True)
+    #df = drop_1std(df)
+    #df.plot()
+    #init_plot("Cleaned sensor values (mean +/- 1 std)", "date", "depth")
+    #ymax = df["depth"].max()
+    #ymin = df["depth"].min()
+    #plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
+    #plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
+
+    # ---------- FIGURE ----------
+    # drop values outside 1 rolling std dev - using pandas DF
     df = pd.DataFrame({"time": x, "depth": y})
     df.set_index("time", inplace=True)
+    df = drop_1_rolling_std(df)
+    df.plot()
+    init_plot("Cleaned sensor values (rolling mean +/- 1 rolling std)", "date", "depth")
+    ymax = df["depth"].max()
+    ymin = df["depth"].min()
+    plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
+    plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
+
+    # ---------- FIGURE ----------
+    # avg per day - using pandas DF re-indexing (and pandas plot wrapper)
+    #df = pd.DataFrame({"time": x, "depth": y})
+    #df.set_index("time", inplace=True)
     df = df.groupby([df.index.year, df.index.month, df.index.day]).aggregate(np.mean)
-    ax = df.plot(kind="bar")  # uses plot method of df
-    ax.set_xlabel("date")
-    ax.set_ylabel("depth")
-    plt.title("Average water depth by day")
+    df.plot(kind="bar")  # uses plot method of df
+    init_plot("Average water depth by day", "date", "depth")
     ymax = df["depth"].max()
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
     plt.savefig("graphs/fig_avg_daily.png", bbox_inches='tight')
 
-    # drop values outside 1 std dev - using pandas DF
-    df = pd.DataFrame({"time": x, "depth": y})
-    df.set_index("time", inplace=True)
-    df = drop_1std(df)
-    ax = df.plot()
-    ax.set_xlabel("date")
-    ax.set_ylabel("depth")
-    plt.title("Cleaned sensor values (mean +/- 1 std)")
-    ymax = df["depth"].max()
-    ymin = df["depth"].min()
-    plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
-
-    plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
-
-    # drop values outside 1 rolling std dev - using pandas DF
-    df = pd.DataFrame({"time": x, "depth": y})
-    df.set_index("time", inplace=True)
-    df = drop_1_rolling_std(df)
-    ax = df.plot()
-    ax.set_xlabel("date")
-    ax.set_ylabel("depth")
-    plt.title("Cleaned sensor values (rolling mean +/- 1 rolling std)")
-    ymax = df["depth"].max()
-    ymin = df["depth"].min()
-    plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
-
-    plt.savefig("graphs/fig_clean_sensor2.png", bbox_inches='tight')
     if show_graphs:
         plt.show()
 
@@ -153,11 +146,15 @@ def drop_1_rolling_std(df):
     rolling_mean = df.rolling(window=win_size).mean()
     rolling_std = df.rolling(window=win_size).std()
 
-    #print(rolling_mean)
-    #print(rolling_std)
-
     return df[
         df["depth"].between(rolling_mean["depth"] - rolling_std["depth"], rolling_mean["depth"] + rolling_std["depth"])]
+
+
+def init_plot(title, xlabel, ylabel):
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
 
 
 if __name__ == "__main__":
