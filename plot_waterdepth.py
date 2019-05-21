@@ -81,8 +81,8 @@ def build_graphs(data, show_graphs=False):
     plt.savefig("graphs/fig_sensor.png", bbox_inches='tight')
 
     # why cannot remove this?
-    #if show_graphs:
-    #    plt.show()
+    if show_graphs:
+        plt.show()
 
     # avg per hour - using pandas DF
     df = pd.DataFrame({"time": x, "depth": y})
