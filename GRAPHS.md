@@ -17,13 +17,13 @@ Here are the graphs it produces. These are automatically refreshed on a regular 
 ### Raw data with some basic mean/std deviation
 This is the raw data, but complemented with some other basic lines:
 * mean water level
-* smooth water readings calcualted using a rolling mean function
+* smooth water readings calculated using a rolling mean function
 * standard deviation (+/- 1 std dev)
 
 ![fig_sensor.png](graphs/fig_sensor.png)
 
 ### Data cleaned by dropping readings > 1 std dev
-This strips out data that exceeds 1 standard deviation from the mean. I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank.
+This strips out data that exceeds 1 standard deviation from the mean (calculated with a rolling window). I was trying this as a way of cleaning up the data. The sensor is proving quite unreliable in the damp surroundings of a water tank.
 
 ![fig_clean_sensor](graphs/fig_clean_sensor.png)
 
