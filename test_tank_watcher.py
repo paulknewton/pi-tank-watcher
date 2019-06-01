@@ -1,6 +1,7 @@
 import pytest
 import tank_watcher
 import loggers as ts
+from unittest.mock import Mock
 
 
 class DummySensor:
@@ -72,16 +73,16 @@ def setup():
 
 def test_mock_objects(setup):
     """Test the dummy sensor/logger are working"""
-    sensor, data_store = setup
+    sensor, logger = setup
 
     reading = sensor.distance()
     assert reading == 37.8113
 
-    assert data_store.get_last_reading() == 0
-    num_readings = len(data_store.get_logged_readings())
-    data_store.log(reading)
-    assert data_store.get_last_reading() == reading
-    assert len(data_store.get_logged_readings()) - num_readings == 1
+    assert logger.get_last_reading() == 0
+    num_readings = len(logger.get_logged_readings())
+    logger.log(reading)
+    assert logger.get_last_reading() == reading
+    assert len(logger.get_logged_readings()) - num_readings == 1
 
 
 def test_quiet_sensor(setup):
@@ -118,3 +119,14 @@ def test_thing_speak_empty():
     """Test the ThingSpeak channel class (empty event)"""
     channel = ts.ThingSpeak("myapi", test_mode=True)
     assert channel.log([]) == "https://api.thingspeak.com/update?api_key=myapi"
+
+
+def test_multiple_loggers(setup):
+    sensor, logger = setup
+    l1 = Mock(logger)
+    l2 = Mock(logger)
+
+    tank_watcher.log_water_depth(sensor, [l1, l2], 205)
+
+    l1.log.assert_called_once_with([167.36])
+    l2.log.assert_called_once_with([167.36])

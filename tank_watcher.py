@@ -54,13 +54,24 @@ class Hcsr04Sensor:
         return distance
 
 
-def log_water_depth(sensor, data_store, sensor_height):
-    """Read sensor multiple times to get a stable reading (calculate mean) and log to the logger store. Readings are taken 20 times. Outliers > median +/- 1 std dev are discarded. Arithmetic mean of the remaining samples is calculated to 2 decimal places."""
+def log_water_depth(sensor, loggers, sensor_height):
+    """
+    Read sensor multiple times to get a stable reading (calculate mean) and log to the logger store.
+    Readings are taken 20 times. Outliers > median +/- 1 std dev are discarded.
+    Arithmetic mean of the remaining samples is calculated to 2 decimal places.
+
+    :param sensor: the sensor to read
+    :param logger: single logger or a list of loggers to record the reading
+    :param sensor_height: height of the sensor above the tank
+    """
+
+    if type(loggers) is not list: loggers = [loggers]
+
     num_measures = 20
     samples = []
     for i in range(0, num_measures):
         samples.append(sensor.distance())
-        print("Measured Distance = %.1f cm" % samples[i])
+        print("Measured Distance = %f cm" % samples[i])
 
     # remove outliers
     stdev = statistics.stdev(samples)
@@ -78,7 +89,8 @@ def log_water_depth(sensor, data_store, sensor_height):
     water_depth = round(sensor_height - clean_measure, 2)  # log to 2 decimal places
 
     print("Logging water depth = %s cm" % water_depth)
-    data_store.log([water_depth])
+    for l in loggers:
+        l.log([water_depth])
 
 
 if __name__ == '__main__':
