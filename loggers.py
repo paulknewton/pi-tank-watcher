@@ -36,3 +36,32 @@ class ThingSpeak:
 class ConsoleLogger:
     def log(self, event):
         print("Event: %s" % event)
+
+
+class AlarmClock:
+    """Logger that allows alarms to be attached for specific events"""
+
+    def __init__(self):
+        """
+        Initialise an AlarmClock from another logger.
+
+        :param logger: the logger to be used each time an event is logged (if None then ignored)
+        """
+        self.events = []
+        self.alarms = []
+
+    def add_alarm(self, trigger, alarm):
+        """
+        Add an an alarm and trigger to the alarm clock.
+
+        :param trigger: a function that takes a list of events, and returns True or False
+        :param alarm: a function invoked if the trigger is met
+        """
+        self.alarms.append((trigger, alarm))
+
+    def log(self, event):
+        self.events.append(event)
+
+        for trigger, alarm in self.alarms:
+            if trigger(self.events):
+                alarm()
