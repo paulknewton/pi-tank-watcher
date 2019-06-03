@@ -15,7 +15,7 @@ class SumpPump:
 
     def __init__(self, on_pin, test_mode=False):
         """Setup a pump watcher on the specific GPIO pin"""
-        self.switch_pin = on_pin
+
         self.test_mode = test_mode
 
         if not test_mode:
@@ -23,6 +23,7 @@ class SumpPump:
             GPIO.setmode(GPIO.BOARD)
             # GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
             GPIO.setup(on_pin, GPIO.IN)
+            GPIO.add_event_detect(on_pin, GPIO.BOTH, callback=self.event, bouncetime=500)
 
         # list of loggers (to allow >1)
         self.loggers = []
@@ -43,8 +44,6 @@ class SumpPump:
         print("Registering listener")
         self.loggers.append(logger)
 
-        if not self.test_mode:
-            GPIO.add_event_detect(self.switch_pin, GPIO.BOTH, self.event)
 
 
 def gen_random_samples(length):
@@ -128,7 +127,7 @@ if __name__ == '__main__':
         pump_channel = loggers.ThingSpeak(args.thing_speak_api)
     else:
         # print("adding console channel")
-        pump_channel = ConsoleLogger()
+        pump_channel = loggers.ConsoleLogger()
 
     pump.add_listener(pump_channel)
 
