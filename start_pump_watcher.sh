@@ -5,6 +5,6 @@
 #
 
 echo "Starting pump watcher daemon..."
-python3 pump_watcher.py
+python3 pump_watcher.py 26
 
 echo Exiting...
