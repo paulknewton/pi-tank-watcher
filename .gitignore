@@ -4,3 +4,4 @@ addAPIs.sh
 .DS_Store
 build-graphs.sh
 __pycache__
+start_pump_watcher.sh
