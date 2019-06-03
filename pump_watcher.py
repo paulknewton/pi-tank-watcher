@@ -3,7 +3,6 @@
 import argparse
 import datetime
 import random
-
 import loggers
 
 PUMP_ON = 1
@@ -45,7 +44,6 @@ class SumpPump:
         self.loggers.append(logger)
 
 
-
 def gen_random_samples(length):
     """
     Generate random sample data for the pump. Simulate occasional lost readings.
@@ -67,7 +65,7 @@ def gen_random_samples(length):
             data.append([ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event])
             sample_id += 1
         else:
-            #print("missed pump PUMP_ON")
+            # print("missed pump PUMP_ON")
             pass
 
         event = gen_mainly_off()
@@ -77,7 +75,7 @@ def gen_random_samples(length):
             data.append((ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event))
             sample_id += 1
         else:
-            #print("missed pump PUMP_OFF")
+            # print("missed pump PUMP_OFF")
             pass
 
     # events are potentially appended in pairs, meaning we may exceed the requested length
@@ -107,6 +105,8 @@ def gen_mainly_off():
 
 
 if __name__ == '__main__':
+    gpio_disabled = False
+
     # read command-line args
     parser = argparse.ArgumentParser(
         description="Monitor the on/off switching of a sump pump")
@@ -116,21 +116,24 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
 
-    import RPi.GPIO as GPIO
-
-    pump = SumpPump(args.gpio_pin)
-    pump_channel = None
+    logger = None
 
     # add a logger to ThingSpeak if defined, otherwise print to console
     if args.thing_speak_api:
         # print("adding ThingSpeak channel (API key %s" % args.thing_speak_api)
-        pump_channel = loggers.ThingSpeak(args.thing_speak_api)
+        logger = loggers.ThingSpeak(args.thing_speak_api)
     else:
         # print("adding console channel")
-        pump_channel = loggers.ConsoleLogger()
+        logger = loggers.ConsoleLogger()
 
-    pump.add_listener(pump_channel)
+    if not gpio_disabled:
+        import RPi.GPIO as GPIO
+    pump = SumpPump(args.gpio_pin, test_mode=gpio_disabled)
+    pump.add_listener(logger)
 
-    # prevents script from exiting
-    input("Hit any key to exit")
-    GPIO.cleanup()
+    try:
+        while True:
+            pass
+    finally:
+        if not gpio_disabled:
+            GPIO.cleanup()

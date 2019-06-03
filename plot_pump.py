@@ -69,7 +69,7 @@ def build_graphs(filename, show_graphs=False):
 
     # plot raw data
     df = pd.DataFrame({"time": time, "pump": event})
-    #print(df)
+    # print(df)
     df.plot(x="time", y="pump")
     plt.savefig("graphs/fig_pump.png", bbox_inches='tight')
 
@@ -79,7 +79,7 @@ def build_graphs(filename, show_graphs=False):
     mean = np.mean(durations)
     print("mean duration = ", mean)
     df = pd.DataFrame({"pump duration": durations})
-    #print(df)
+    # print(df)
     df.plot(kind="bar")
     plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
 
@@ -91,7 +91,7 @@ def build_graphs(filename, show_graphs=False):
     print("stripped stddev durations:", len(durations))
     print("mean duration = ", np.mean(durations))
     df = pd.DataFrame({"excl. 1 stddev pump duration": durations})
-    #print(df)
+    # print(df)
     df.plot(kind="bar")
 
     # drop upper/lower percentiles
@@ -99,7 +99,7 @@ def build_graphs(filename, show_graphs=False):
     print("stripped percentile durations:", len(durations))
     print("mean duration = ", np.mean(durations))
     df = pd.DataFrame({"excl. upper/lower percentile pump duration": durations})
-    #print(df)
+    # print(df)
     df.plot(kind="bar")
 
     plt.show()
@@ -114,13 +114,12 @@ if __name__ == "__main__":
     parser.add_argument('--create', dest="create_data", action="store_true", default=False, help="create test data")
     args = parser.parse_args()
 
-    args.create_data = True
     if args.create_data:
         print("Creating test data...")
         data = pw.gen_random_samples(40)
         with open(args.filename, "w", newline='') as f:
             writer = csv.writer(f)
-            header=[["created_at", "entry_id", "field1"]]
+            header = [["created_at", "entry_id", "field1"]]
             writer.writerows(header)
             writer.writerows(data)
 
