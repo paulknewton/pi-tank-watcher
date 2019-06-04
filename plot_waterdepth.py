@@ -2,9 +2,6 @@ import argparse
 import csv
 from datetime import datetime
 import matplotlib
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 import dateutil.tz
 import numpy as np
 import pandas as pd
@@ -52,8 +49,8 @@ def build_graphs(data, show_graphs=False):
 
     if not show_graphs:
         matplotlib.use("Agg")  # allows figures to be generated on headless server
-
-    # import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
+    import seaborn as sns
     sns.set(style="darkgrid")
 
     # from pandas.plotting import register_matplotlib_converters
@@ -155,6 +152,7 @@ def drop_1_rolling_std(df):
 
 
 def init_plot(title, xlabel, ylabel):
+    import matplotlib.pyplot as plt
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)

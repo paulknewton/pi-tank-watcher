@@ -6,7 +6,6 @@ from numpy import genfromtxt
 from datetime import datetime
 import argparse
 import matplotlib
-import seaborn as sns
 
 
 def count_pump_on(data):
@@ -59,11 +58,12 @@ def build_graphs(filename, show_graphs=False):
     print(data.dtype.names)
 
     print("Generating graphs...")
-    sns.set(style="darkgrid")
 
     if not show_graphs:
         matplotlib.use("Agg")  # allows figures to be generated on headless server
     import matplotlib.pyplot as plt
+    import seaborn as sns
+    sns.set(style="darkgrid")
 
     time, sample_id, event = zip(*data)  # * operator to unpack to positional args --> unzip
 
@@ -81,7 +81,7 @@ def build_graphs(filename, show_graphs=False):
     df = pd.DataFrame({"pump duration": durations})
     # print(df)
     df.plot(kind="bar")
-    plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
+    #plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
 
     std_dev = df.loc[:, "pump duration"].std()
     print("std dev = ", std_dev)
@@ -102,7 +102,8 @@ def build_graphs(filename, show_graphs=False):
     # print(df)
     df.plot(kind="bar")
 
-    plt.show()
+    if show_graphs:
+        plt.show()
 
 
 if __name__ == "__main__":
