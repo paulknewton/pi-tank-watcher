@@ -130,3 +130,16 @@ def test_multiple_loggers(setup):
 
     l1.log.assert_called_once_with([167.36])
     l2.log.assert_called_once_with([167.36])
+
+
+def test_negative(setup):
+    sensor, logger_template = setup
+    logger = Mock(logger_template)
+
+    tank_watcher.log_water_depth(sensor, logger, 37.64)
+    logger.log.assert_called_once_with([0])
+    assert logger.log.call_count == 1
+
+    # Lowering the sensor results in a -ve reading. Should not be logged (i.e. call_count remains unchanged)
+    tank_watcher.log_water_depth(sensor, logger, 37.63)
+    assert logger.log.call_count == 1

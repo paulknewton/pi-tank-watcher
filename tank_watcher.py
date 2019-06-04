@@ -88,10 +88,12 @@ def log_water_depth(sensor, loggers, sensor_height):
     print("Avg. measurement (excl. outliers) = %.2f cm" % clean_measure)
     water_depth = round(sensor_height - clean_measure, 2)  # log to 2 decimal places
 
-    print("Logging water depth = %s cm" % water_depth)
-    for l in loggers:
-        l.log([water_depth])
-
+    if water_depth >= 0:
+        print("Logging water depth = %s cm" % water_depth)
+        for l in loggers:
+            l.log([water_depth])
+    else:
+        print("Skipping -ve water depth (%s cm)" % water_depth)
 
 if __name__ == '__main__':
     # read command-line args
