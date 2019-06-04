@@ -81,7 +81,7 @@ def build_graphs(filename, show_graphs=False):
     df = pd.DataFrame({"pump duration": durations})
     # print(df)
     df.plot(kind="bar")
-    #plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
 
     std_dev = df.loc[:, "pump duration"].std()
     print("std dev = ", std_dev)
