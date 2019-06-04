@@ -4,6 +4,7 @@ import argparse
 import datetime
 import random
 import loggers
+import time
 
 PUMP_ON = 1
 PUMP_OFF = 0
@@ -133,7 +134,7 @@ if __name__ == '__main__':
 
     try:
         while True:
-            pass
+            time.sleep(86400)   # sleep 1 day
     finally:
         if not gpio_disabled:
             GPIO.cleanup()
