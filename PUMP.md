@@ -108,6 +108,10 @@ This is the pump activity I have been seeing:
 
 ![fig_pump](graphs/fig_pump.png)
 
+This shows the pump activating approximately once per hour while it pumps out the water. This seems okay, but the weather is quite dry. This kind of frequency may start to increase (potentially too much) once the rainfall starts. We will see.
+
 If you measure only the periods when the pump is running (time from pump ON to pump OFF):
 
 ![fig_pump_durations](graphs/fig_pump_durations.png)
+
+This shows the pump takes about 1 minute to empty the sump. The float is positioned quite low in the sump, so there is not an enormous amount of water to evacuate. I could probably reduce the pump time quite significantly only by replacing the pipe with something wider. But again, this seems okay for the time being.
