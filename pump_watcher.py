@@ -22,7 +22,8 @@ class SumpPump:
             # GPIO Mode (BOARD / BCM)
             GPIO.setmode(GPIO.BOARD)
             # pull-down resistor to avoid false triggers
-            GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            #GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+            GPIO.setup(on_pin, GPIO.IN)
             GPIO.add_event_detect(on_pin, GPIO.BOTH, callback=self.event, bouncetime=500)
 
         # list of loggers (to allow >1)
