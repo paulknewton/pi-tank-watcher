@@ -91,10 +91,12 @@ def setup():
         ("2019-06-06 19:39:30 UTC", "0")
     ]
 
+    str2date = lambda x: datetime.strptime(x, "%Y-%m-%d %H:%M:%S UTC")
+
     # convert to datetime instances
     data = []
     for time, state in raw_data:
-        data.append((pp.thingspeak_str2date(time), state))
+        data.append((str2date(time), state))
     return data
 
 
