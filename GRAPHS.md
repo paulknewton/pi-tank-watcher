@@ -3,7 +3,7 @@
 All of the sensor sampling and data upload is written in Python. But Python also has a very rich set of mathematical libraries and frameworks for analysing the data. The top-level README explains how to run the various programs for logging sensor data. This section describes how the graphs are generated in python (2 plot_data.py programs: 1 for the sensor plots, 1 for the weather data).
 
 ## What does it do?
-There are 2 programs:
+There are 3 programs:
 * [plot_waterdepth.py](plot_waterdepth.py) - generate graphs for the water level tank sensor
 * [plot_weather.py](plot_weather.py) - generate graphs for the weather data
 * [plot_pump.py](plot_pump.py) - generate graphs for the weather data
