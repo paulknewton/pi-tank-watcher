@@ -1,6 +1,6 @@
 # Analysing data with Python
 
-All of the sensor sampling and data upload is written in Python. But Python also has a very rich set of mathematical libraries and frameworks for analysing the data. The top-level README explains how to run the various programs for logging sensor data. This section describes how the graphs are generated in python (2 plot_data.py programs: 1 for the sensor plots, 1 for the weather data).
+All of the sensor sampling and data upload is written in Python. But Python also has a very rich set of mathematical libraries and frameworks for analysing the data. The top-level README explains how to run the various programs for logging sensor data. This section describes how the graphs are generated in python.
 
 ## What does it do?
 There are 3 programs:
@@ -47,7 +47,6 @@ This is a plot of the individual durations when the pump is running:
 
 ![fig_pump_durations_off_on](graphs/fig_pump_durations_off_on.png)
 
-
 ---
 ## Weather graphs
 ### Weather data correlations
@@ -60,7 +59,7 @@ What do the graphs show (apart from the fact that weather patterns are complex a
 ![fig_humidity_temp.png](img/fig_humidity_temp.png)
 
 ## How does the code work?
-I will write this up in more detail. In short:
+In short:
 * sensor data is read from a file via CSV reader; weather data is read from a file directly via numpy
 * timezone handling is a bit of a pain
 * vector handling and mathematical calculations (mean, standard deviation) are via numpy. Once you have numpy arrays, you can do a lot of data manipulation. And if you need to pass the data on to pandas, the numpy arrays play well with the other libraries.
