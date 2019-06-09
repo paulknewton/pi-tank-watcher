@@ -113,15 +113,15 @@ def build_graphs(filename, truncate, show_graphs=False):
     on_off_df = create_durations_for_event_pair(data, pw.PUMP_ON, pw.PUMP_OFF, "on_duration")
     # print(on_off_df)
     ax = on_off_df.plot(kind="bar", linewidth=0)
-    plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+    plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
 
     off_on_df = create_durations_for_event_pair(data, pw.PUMP_OFF, pw.PUMP_ON, "off_duration")
     off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
     # print(off_on_df)
     ax = off_on_df.plot(kind="bar", linewidth=0)
-    plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+    plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
 
     # durations_df = pd.concat([on_off_df, off_on_df], sort=False).sort_index()
 

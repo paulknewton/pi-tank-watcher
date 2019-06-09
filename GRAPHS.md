@@ -40,7 +40,12 @@ This is a plot of the raw sump data ON/OFF activity:
 
 ### Pump running durations
 This is a plot of the individual durations when the pump is running:
-![fig_pump_durations](graphs/fig_pump_durations.png)
+
+![fig_pump_durations_on_off](graphs/fig_pump_durations_on_off.png)
+
+...and this is a plot of the durations when the pump is off:
+
+![fig_pump_durations_off_on](graphs/fig_pump_durations_off_on.png)
 
 
 ---
