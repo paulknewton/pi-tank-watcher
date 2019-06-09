@@ -10,58 +10,85 @@ import matplotlib
 
 def count_pump_on(data):
     # cast to int in case the data is some other type
-    return len([d for d in data if int(d[1]) == pw.PUMP_ON])
+    return len([d for d in data if int(d[2]) == pw.PUMP_ON])
 
 
 def count_pump_off(data):
     # cast to int in case the data is some other type
-    return len([d for d in data if int(d[1]) == pw.PUMP_OFF])
+    return len([d for d in data if int(d[2]) == pw.PUMP_OFF])
 
 
 def find_next_event(data, event_type):
     for i in range(0, len(data)):
-        if int(data[i][1]) == event_type:
+        if int(data[i][2]) == event_type:
             return data[i:]
 
 
-def get_on_off_durations(data):
-    data = find_next_event(data, pw.PUMP_ON)
-    if not data:
-        return None, None
-    on_event = data[0]
-    # print("next on: ", on_event)
+def find_next_duration(data, event1, event2):
+    """
+    Get the duration of the next event1/event2 combination.
 
-    data = find_next_event(data[1:], pw.PUMP_OFF)
-    if not data:
-        return None, None
-    off_event = data[0]
+    :param data: list of tuples, of the form (datetime, int)
+    :return tuple of the form (datetime, float, data) where datetime is the timestamp when event1 occurred, float is the duration between the next event1/event2 (in secs), and the remaining data with event1/event2 removed
+    """
+    data = find_next_event(data, event1)
+    if data is None:  # could not find event
+        return None, None, None
+    on_event_ts = data[0][0]
+    # print("next event %s @ %s" % (on_event_ts, event1)
+
+    data = find_next_event(data[1:], event2)
+    if data is None:  # could not find event
+        return None, None, None
+    off_event_ts = data[0][0]
     # print("next off: ", off_event)
 
-    return data, off_event[0] - on_event[0]
+    return on_event_ts, off_event_ts - on_event_ts, data
 
 
-def get_all_durations(data):
+def create_durations_for_event_pair(data, event1, event2, col, strip_outliers=False):
     durations = []
 
-    while data:
-        data, pump_duration = get_on_off_durations(data)
+    while data is not None:
+        event_ts, pump_duration, data = find_next_duration(data, event1, event2)
         if pump_duration:
             pump_duration = pump_duration.total_seconds()  # convert to seconds - gives clearer graphs
-            durations.append(pump_duration)
+            durations.append({'time': event_ts, col: pump_duration})
 
-    return durations
+    df = pd.DataFrame(columns=["time", col])
+    # df = pd.DataFrame(durations)
+    if durations:  # raises exception if try to append empty list
+        df = df.append(durations)
+
+    df.set_index('time', inplace=True)
+
+    # drop values > +/- 1 std dev
+    if strip_outliers:
+        mean = df.mean()
+        std_dev = df.std(ddof=0)  # ddof handles single values
+        df = df[
+            (df >= mean - std_dev) & (df <= mean + std_dev)].dropna()  # unsure why need to explicitly drop NaN values
+
+    return df
 
 
 def thingspeak_str2date(x):
+    """Convert string in ThingSpeak files to datetime"""
     return datetime.strptime(x.decode("utf-8"), "%Y-%m-%d %H:%M:%S UTC")
 
 
-def build_graphs(filename, show_graphs=False):
+def build_graphs(filename, truncate, show_graphs=False):
     """Generates graphs for pump data. Saves files as .PNG"""
     print("Reading data from %s..." % filename)
 
     data = genfromtxt(filename, delimiter=",", dtype=None, names=True, converters={0: thingspeak_str2date})
+    print("Read %d entries" % len(data))
     print(data.dtype.names)
+
+    # truncate data
+    data = data[-truncate:]
+    print("Truncating to %d entries" % len(data))
+    # print(data)
 
     print("Generating graphs...")
 
@@ -69,52 +96,46 @@ def build_graphs(filename, show_graphs=False):
         matplotlib.use("Agg")  # allows figures to be generated on headless server
     import matplotlib.pyplot as plt
     import seaborn as sns
-    sns.set(style="darkgrid")
+    sns.set(style="dark")
 
-    time, sample_id, event = zip(*data)  # * operator to unpack to positional args --> unzip
+    time, sample_id, event = zip(*data)  # unpack to positional args --> unzip
 
     # ---------- FIGURE ----------
     # plot raw data
     df = pd.DataFrame({"time": time, "pump": event})
     # print(df)
     df.plot(x="time", y="pump")
-    plt.savefig("graphs/fig_pump.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
     # ---------- FIGURE ----------
-    # plot durations when pump is on
-    durations = np.array(get_all_durations(list(zip(time, event))))
-    print("durations: ", len(durations))
-    print("mean duration = ", np.mean(durations))
-    # print(durations)
-    df = pd.DataFrame({"on duration": durations})
-    # print(df)
-    ax = df.plot(kind="bar")
-    ax.get_xaxis().set_ticks([])    # need to clear xticks here (cannot set in .plot function)
-    plt.savefig("graphs/fig_pump_durations.png", bbox_inches='tight')
+    # plot durations when pump is on/off
+    # df = create_durations_df(list(zip(time, event)))
+    on_off_df = create_durations_for_event_pair(data, pw.PUMP_ON, pw.PUMP_OFF, "on_duration")
+    # print(on_off_df)
+    ax = on_off_df.plot(kind="bar", linewidth=0)
+    plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
+    ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+
+    off_on_df = create_durations_for_event_pair(data, pw.PUMP_OFF, pw.PUMP_ON, "off_duration")
+    off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
+    # print(off_on_df)
+    ax = off_on_df.plot(kind="bar", linewidth=0)
+    plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
+    ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+
+    # durations_df = pd.concat([on_off_df, off_on_df], sort=False).sort_index()
 
     if show_graphs:
         plt.show()
     return
 
-    std_dev = df.loc[:, "pump duration"].std()
-    print("std dev = ", std_dev)
-
-    # ---------- FIGURE ----------
-    # drop 1 std dev
-    mean = np.mean(durations)
-    durations = durations[(durations >= mean - std_dev) & (durations <= mean + std_dev)]
-    print("stripped stddev durations:", len(durations))
-    print("mean duration = ", np.mean(durations))
-    df = pd.DataFrame({"excl. 1 stddev pump duration": durations})
-    # print(df)
-    df.plot(kind="bar")
-
     # ---------- FIGURE ----------
     # drop upper/lower percentiles
-    durations = durations[(durations >= np.percentile(durations, 10)) & (durations <= np.percentile(durations, 90))]
-    print("stripped percentile durations:", len(durations))
-    print("mean duration = ", np.mean(durations))
-    df = pd.DataFrame({"excl. upper/lower percentile pump duration": durations})
+    on_durations = on_durations[
+        (on_durations >= np.percentile(on_durations, 10)) & (on_durations <= np.percentile(on_durations, 90))]
+    print("stripped percentile durations:", len(on_durations))
+    print("mean duration = ", np.mean(on_durations))
+    df = pd.DataFrame({"excl. upper/lower percentile pump duration": on_durations})
     # print(df)
     df.plot(kind="bar")
 
@@ -140,4 +161,4 @@ if __name__ == "__main__":
             writer.writerows(header)
             writer.writerows(data)
 
-    build_graphs(args.filename, args.show)
+    build_graphs(args.filename, 600, args.show)
