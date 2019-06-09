@@ -76,6 +76,7 @@ Once I was happy with everything, I transferred everything over to a prototype b
 Again, it looks a lot more complicated than it is because of all the resistors.
 
 ![circuit](img/circuit.jpg)
+![circuit-relay](img/circuit-relay.jpg)
 
 ## The enclosure
 Nearly there. We have a circuit, but I wanted it all packaged up into a box to protect it, and prevent anything coming near to the mains voltage. I bought a junction box so I could avoid too much drilling, and installed some 3.5mm jack sockets for the water-level sensors. The 12V transformer (used to power the relay and the sensors) was screwed to the junction box with some risers.
@@ -83,6 +84,9 @@ A mains socket was sliced apart and mounted on to the surface of the enclosure. 
 A few labels on the outside, and we are good to go.
 
 ![enclosure](img/enclosure.jpg)
+
+The circuit is installed and wired up (getting messy in here!):
+![enclosure2](img/enclosure2.jpg)
 
 ## Installing the floats
 I wanted a way to install the floats in the sump, but also protect them from getting knocked around (I still wanted to keep my old sump pump as backup, but space gets a bit tight in there, and I was worried that my floats could get tangled up). I came up with a solution using a short piece of plastic drainpipe and a drainpipe bracket which I screwed to the side of the sump. The sensor was screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
@@ -100,7 +104,9 @@ A few points that are important:
 ## Logging the sump activity via Raspberry Pi
 Of course, all simple ideas soon grow into something more complicated. I wanted a way of monitoring the sump pump, particularly to get an idea how often it was switching on/off.
 
-I decided to add an output signal to the controller which I could connect to a Raspberry Pi. The Raspberry Pi reads the signal via the GPIO, and logs the high/low (on/off) signals. The extension to the circuit is pretty simple. Just remember that the maximum input voltage to an Raspberry Pi is 3.3.V. My circuit was using a 12V supply, so I wired up a simple potential divider with 2 resistors to drop the signal to 3.3V.
+I decided to add an output signal to the controller which I could connect to a Raspberry Pi. The Raspberry Pi reads the signal via the GPIO, and logs the high/low (on/off) signals. The extension to the circuit is pretty simple. Just remember that the maximum input voltage to an Raspberry Pi is 3.3.V. My circuit was using a 12V supply, so I wired up a potential divider with 2 resistors to drop the signal to 3.3V.
+
+![pi](img/pi.jpg)
 
 The code monitors the GPIO PIN (via interrupts to avoid endlessly looping). Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
 
@@ -108,10 +114,23 @@ This is the pump activity I have been seeing:
 
 ![fig_pump](graphs/fig_pump.png)
 
-This shows the pump activating approximately once per hour while it pumps out the water. This seems okay, but the weather is quite dry. This kind of frequency may start to increase (potentially too much) once the rainfall starts. We will see.
+This raw data can be used to extract the durations when the pump is on, and when the pump is off.
 
-If you measure only the periods when the pump is running (time from pump ON to pump OFF):
 
-![fig_pump_durations](graphs/fig_pump_durations.png)
+![fig_durations_on_off](graphs/fig_pump_durations_on_off.png)
+![fig_durations_off_on](graphs/fig_pump_durations_off_on.png)
 
-This shows the pump takes about 1 minute to empty the sump. The float is positioned quite low in the sump, so there is not an enormous amount of water to evacuate. I could probably reduce the pump time quite significantly only by replacing the pipe with something wider. But again, this seems okay for the time being.
+After the initial installation, the pump was activating around once on hour, for about 1 minute at a time while it emptied the sump.
+During a particular storm, this increased to around every 20 minutes (even taking up to 5 minutes to empty the sump at one point, which shows how much extra water was filling the sump).
+ 
+I re-calibrated the pump cycles by raising the float a few centimetres higher in the sump. The sump itself is larger at the top than the bottom, so by raising the float the pump has to empty more water each time before switching off. It still pumps out 10cm of water, but there is more water to move in this 10cm than lower down in the sump. Similarly, the sump takes longer to fill this 10cm at the top than at the bottomn, so there is a longer wait between pump cycles.
+After re-calibration, the pump now runs every 2-2.5 hrs, running 2 minutes to empty the sump.
+
+Which is better? Well, running every hour seemed like too much to me, so I'm happier with the slower pump cycle. Is this better to prolong the pump lifetime? Honestly, I don't really know, but I'll keep it like this for a while and see how it goes.
+
+## And finally...
+
+So here is the pump controller in its natural home by the sump, happily pumping out water and logging the activity. You can see the pump at the bottom of the picture, and the sensor cables trailing out of view.
+Phew - this project took a LOT longer than I planned!
+
+![installed](img/installed.jpg)
