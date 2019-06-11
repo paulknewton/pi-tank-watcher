@@ -91,7 +91,7 @@ The circuit is installed and wired up (getting messy in here!):
 ## Installing the floats
 I wanted a way to install the floats in the sump, but also protect them from getting knocked around (I still wanted to keep my old sump pump as backup, but space gets a bit tight in there, and I was worried that my floats could get tangled up). I came up with a solution using a short piece of plastic drainpipe and a drainpipe bracket which I screwed to the side of the sump. The sensor was screwed into an end-pipe cover, and the pipe is adjusted to get the correct height:
 
-IMG
+![float-pipe](img/float-pipe.jpg)
 
 ## Buying a new pump
 We have a pump controller and the water-level sensors. But back to the sump pump: my previous sump pump had an integrated pump and float. The solution I was coming up had a custom controller that separated out the pump-control logic - this meant buying a new standalone pump that could be switched on and off by switching the mains current. I went with this one - a pretty standard outdoor pond pump.
