@@ -120,7 +120,7 @@ This raw data can be used to extract the durations when the pump is on, and when
 ![fig_durations_on_off](graphs/fig_pump_durations_on_off.png)
 ![fig_durations_off_on](graphs/fig_pump_durations_off_on.png)
 
-After the initial installation, the pump was activating around once on hour, for about 1 minute at a time while it emptied the sump.
+After the initial installation, the pump was activating around once an hour, for about 1 minute at a time while it emptied the sump.
 During a particular storm, this increased to around every 20 minutes (even taking up to 5 minutes to empty the sump at one point, which shows how much extra water was filling the sump).
  
 I re-calibrated the pump cycles by raising the float a few centimetres higher in the sump. The sump itself is larger at the top than the bottom, so by raising the float the pump has to empty more water each time before switching off. It still pumps out 10cm of water, but there is more water to move in this 10cm than lower down in the sump. Similarly, the sump takes longer to fill this 10cm at the top than at the bottomn, so there is a longer wait between pump cycles.
