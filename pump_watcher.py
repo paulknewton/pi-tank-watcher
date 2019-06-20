@@ -119,12 +119,14 @@ if __name__ == '__main__':
 
     # add a logger to ThingSpeak if defined, otherwise print to console
     if args.thing_speak_api:
-        # print("adding ThingSpeak channel (API key %s" % args.thing_speak_api)
+        print("Adding ThingSpeak logger (API key %s)" % args.thing_speak_api)
         logger = loggers.ThingSpeak(args.thing_speak_api)
     else:
-        # print("adding console channel")
+        print("Adding console logger")
         logger = loggers.ConsoleLogger()
 
+    print("Connecting to pin %s" % args.gpio_pin)
+    
     # --- Create the pump monitor
     if args.gpio_lib:
         if args.gpio_lib == "RPi.GPIO":
