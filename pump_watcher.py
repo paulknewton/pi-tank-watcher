@@ -13,39 +13,32 @@ PUMP_OFF = 0
 class SumpPump:
     """Monitor of a sump pump. Logs when pump is activated/de-activated"""
 
-    def __init__(self, on_pin, test_mode=False):
+    def __init__(self, on_pin):
         """Setup a pump watcher on the specific GPIO pin"""
-
-        self.test_mode = test_mode
-
-        if not test_mode:
-            # GPIO Mode (BOARD / BCM)
-            GPIO.setmode(GPIO.BOARD)
-
-            # pull-down resistor to avoid false triggers
-            GPIO.setup(on_pin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-            #GPIO.setup(on_pin, GPIO.IN)
-
-            GPIO.add_event_detect(on_pin, GPIO.BOTH, callback=self.event, bouncetime=500)
 
         # list of loggers (to allow >1)
         self.loggers = []
 
     def event(self, pin):
-        """Switch on. Log event to the channel (1=pump on; 0 = pump_off; -1=undefined"""
-        status = -1
-        if not self.test_mode:
-            status = GPIO.input(pin)
+        """Switch on. Log event to the channel"""
+        status = self.get_status()
         print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), pin, status))
 
         for l in self.loggers:
             if l:  # ignore empty loggers
                 l.log([status])
 
+    def get_status(self):
+        """Default implementation to return status. Always return -1."""
+        return -1
+
     def add_listener(self, logger):
         """Add a listener to be called when the pump is enabled/disabled. Can add multiple listeners to be called in sequence."""
         print("Registering listener")
         self.loggers.append(logger)
+
+    def cleanup(self):
+        pass
 
 
 def gen_random_samples(length):
@@ -117,9 +110,11 @@ if __name__ == '__main__':
     parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
     parser.add_argument("--thingspeak", dest="thing_speak_api",
                         help="API key to write new sensor readings to thingspeak.com channel")
+    parser.add_argument("--gpio", help="GPIO library to use implementation", type=str, choices=["RPi.GPIO", "wiringpi"], dest="gpio_lib", default=None)
     args = parser.parse_args()
     print(args)
 
+    # --- Setup where to log the data
     logger = None
 
     # add a logger to ThingSpeak if defined, otherwise print to console
@@ -130,14 +125,25 @@ if __name__ == '__main__':
         # print("adding console channel")
         logger = loggers.ConsoleLogger()
 
-    if not gpio_disabled:
-        import RPi.GPIO as GPIO
-    pump = SumpPump(args.gpio_pin, test_mode=gpio_disabled)
+    # --- Create the pump monitor
+    if args.gpio_lib:
+        if args.gpio_lib == "RPi.GPIO":
+            import pump_rpio_gpio
+            print("Using RPi.GPIO library")
+            pump = pump_rpio_gpio.RpiGpioPump(args.gpio_pin)
+        elif args.gpio_lib == "wiringpi":
+            import pump_wiringpi
+            print("Using wiringpi library")
+            pump = pump_wiringpi.WiringPiPump(args.gpio_pin)
+    else:
+        print("GPIO disabled")
+        pump = SumpPump(args.gpio_pin)
+
     pump.add_listener(logger)
 
     try:
+        print("Waiting for events...")
         while True:
-            time.sleep(86400)   # sleep 1 day
+            time.sleep(86400)  # sleep 1 day
     finally:
-        if not gpio_disabled:
-            GPIO.cleanup()
+        pump.cleanup()

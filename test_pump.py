@@ -2,7 +2,7 @@ import plot_pump as pp
 import pump_watcher as pw
 import pytest
 from datetime import datetime
-import pandas as pd
+#import pandas as pd
 
 
 @pytest.fixture
@@ -168,7 +168,7 @@ def test_data_generation():
 
 def test_callbacks():
     """Test that callbacks can be added to a pump and these are triggered by events"""
-    pump = pw.SumpPump(9, test_mode=True)  # setup pump on PIN 9
+    pump = pw.SumpPump(9)  # setup pump on PIN 9
 
     # dummy logger to record events
     class DummyLogger:
