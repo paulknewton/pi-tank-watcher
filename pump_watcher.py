@@ -36,7 +36,7 @@ class SumpPump:
         status = -1
         if not self.test_mode:
             status = GPIO.input(pin)
-        print("Change status on pin %d --> %s" % (pin, status))
+        print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), pin, status))
 
         for l in self.loggers:
             if l:  # ignore empty loggers
