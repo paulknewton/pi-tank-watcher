@@ -19,6 +19,3 @@ class WiringPiPump(pump_watcher.SumpPump):
 
     def get_status(self, pin):
         return wiringpi.digitalRead(pin)
-
-    def cleanup(self):
-        RPIO.cleanup()
