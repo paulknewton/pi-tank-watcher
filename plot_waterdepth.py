@@ -99,16 +99,29 @@ def build_graphs(data, show_graphs=False):
     # plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
 
     # ---------- FIGURE ----------
-    # drop values outside 1 rolling std dev - using pandas DF
+    # drop values outside rolling mean +/- 1 rolling std dev
+    # df = pd.DataFrame({"time": x, "depth": y})
+    # df.set_index("time", inplace=True)
+    # df = drop_1_rolling_std_from_rolling_mean(df)
+    # df.plot()
+    # init_plot("Cleaned sensor values (rolling mean +/- 1 rolling std)", "date", "depth")
+    # ymax = df["depth"].max()
+    # ymin = df["depth"].min()
+    # plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
+    # plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
+
+    # ---------- FIGURE ----------
+    # drop values outside rolling min
     df = pd.DataFrame({"time": x, "depth": y})
     df.set_index("time", inplace=True)
-    df = drop_1_rolling_std(df)
+    df = drop_1_rolling_std_from_rolling_min(df)
+    # print(df.to_string())
     df.plot()
-    init_plot("Cleaned sensor values (rolling mean +/- 1 rolling std)", "date", "depth")
+    init_plot("Cleaned sensor values (rolling min +/-)", "date", "depth")
     ymax = df["depth"].max()
     ymin = df["depth"].min()
     plt.ylim(max(0, (ymin - (ymin * 0.1))), ymax + (ymax * 0.1))
-    plt.savefig("graphs/fig_clean_sensor.png", bbox_inches='tight')
+    plt.savefig("graphs/fig_sensor_clean.png", bbox_inches='tight')
 
     # ---------- FIGURE ----------
     # avg per day - using pandas DF re-indexing (and pandas plot wrapper)
@@ -136,13 +149,21 @@ def build_graphs(data, show_graphs=False):
     plt.close()
 
 
-def drop_1std(df):
+def init_plot(title, xlabel, ylabel):
+    import matplotlib.pyplot as plt
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title)
+    plt.legend()
+
+
+def drop_1std_from_mean(df):
     mean = df.mean()["depth"]
     std = df.std()["depth"]
     return df[df["depth"].between(mean - std, mean + std)]
 
 
-def drop_1_rolling_std(df):
+def drop_1_rolling_std_from_rolling_mean(df):
     win_size = 50
     rolling_mean = df.rolling(window=win_size).mean()
     rolling_std = df.rolling(window=win_size).std()
@@ -151,12 +172,16 @@ def drop_1_rolling_std(df):
         df["depth"].between(rolling_mean["depth"] - rolling_std["depth"], rolling_mean["depth"] + rolling_std["depth"])]
 
 
-def init_plot(title, xlabel, ylabel):
-    import matplotlib.pyplot as plt
-    plt.xlabel(xlabel)
-    plt.ylabel(ylabel)
-    plt.title(title)
-    plt.legend()
+def drop_1_rolling_std_from_rolling_min(df):
+    min_win_size = 50  # Number of samples to include in sample. Too small and it will get distorted by periods of false readings. Too large and it will over-strip values.
+    tolerance = 10  # Increase/decrease (cm) permitted compared to rolling minimum. Too small will prevent larger changes.
+
+    rolling_min = df.rolling(window=min_win_size).min()
+    # print(df.to_string())
+    # print(rolling_min.to_string())
+
+    return df[
+        df["depth"].between(rolling_min["depth"] - tolerance, rolling_min["depth"] + tolerance)]
 
 
 if __name__ == "__main__":
