@@ -13,16 +13,22 @@ PUMP_OFF = 0
 class SumpPump:
     """Monitor of a sump pump. Logs when pump is activated/de-activated"""
 
-    def __init__(self, on_pin):
+    def __init__(self, pin):
         """Setup a pump watcher on the specific GPIO pin"""
 
         # list of loggers (to allow >1)
         self.loggers = []
 
-    def event(self, pin):
-        """Switch on. Log event to the channel"""
+        # store the pin for use in the callback
+        self.pin = pin
+
+    def event(self, *args):
+        """
+        Callback to log an event change to the configured loggers.
+        Uses variable args because different GPIO libraries invoke with different parameters
+        """
         status = self.get_status()
-        print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), pin, status))
+        print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
 
         for l in self.loggers:
             if l:  # ignore empty loggers
@@ -110,7 +116,8 @@ if __name__ == '__main__':
     parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
     parser.add_argument("--thingspeak", dest="thing_speak_api",
                         help="API key to write new sensor readings to thingspeak.com channel")
-    parser.add_argument("--gpio", help="GPIO library to use implementation", type=str, choices=["RPi.GPIO", "wiringpi"], dest="gpio_lib", default=None)
+    parser.add_argument("--gpio", help="GPIO library to use implementation", type=str, choices=["RPi.GPIO", "wiringpi"],
+                        dest="gpio_lib", default=None)
     args = parser.parse_args()
     print(args)
 
@@ -126,15 +133,17 @@ if __name__ == '__main__':
         logger = loggers.ConsoleLogger()
 
     print("Connecting to pin %s" % args.gpio_pin)
-    
+
     # --- Create the pump monitor
     if args.gpio_lib:
         if args.gpio_lib == "RPi.GPIO":
             import pump_rpio_gpio
+
             print("Using RPi.GPIO library")
             pump = pump_rpio_gpio.RpiGpioPump(args.gpio_pin)
         elif args.gpio_lib == "wiringpi":
             import pump_wiringpi
+
             print("Using wiringpi library")
             pump = pump_wiringpi.WiringPiPump(args.gpio_pin)
     else:
