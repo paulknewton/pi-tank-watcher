@@ -181,8 +181,8 @@ def test_callbacks():
     test_logger1 = DummyLogger()
     pump.add_listener(test_logger1)
 
-    # simulate an event on PIN 9
-    pump.event(9)
+    # simulate an event
+    pump.event()
     assert len(test_logger1.events) == 1  # check only 1 event
     assert test_logger1.events == [
         [-1]]  # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used

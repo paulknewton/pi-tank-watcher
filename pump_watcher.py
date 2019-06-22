@@ -27,14 +27,14 @@ class SumpPump:
         Callback to log an event change to the configured loggers.
         Uses variable args because different GPIO libraries invoke with different parameters
         """
-        status = self.get_status()
+        status = self.get_status(self.pin)
         print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
 
         for l in self.loggers:
             if l:  # ignore empty loggers
                 l.log([status])
 
-    def get_status(self):
+    def get_status(self, pin):
         """Default implementation to return status. Always return -1."""
         return -1
 
