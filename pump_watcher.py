@@ -21,6 +21,9 @@ class SumpPump:
 
         # store the pin for use in the callback
         self.pin = pin
+        
+        # used to prevent duplicate events (pull-down resistor does not fix it)
+        self.prev_status = None
 
     def event(self, *args):
         """
@@ -28,11 +31,16 @@ class SumpPump:
         Uses variable args because different GPIO libraries invoke with different parameters
         """
         status = self.get_status(self.pin)
-        print("%s: Change status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
+        print("%s: Status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
+        
+        if status == prev_status:
+            print("Status did not change. Skipping.")
+            return
 
         for l in self.loggers:
             if l:  # ignore empty loggers
                 l.log([status])
+        prev_status = status
 
     def get_status(self, pin):
         """Default implementation to return status. Always return -1."""
