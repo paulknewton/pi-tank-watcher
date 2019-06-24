@@ -2,7 +2,7 @@ import plot_pump as pp
 import pump_watcher as pw
 import pytest
 from datetime import datetime
-#import pandas as pd
+import mock
 
 
 @pytest.fixture
@@ -159,6 +159,8 @@ def test_durations_missing_on(setup):
     data2 = data[-9:]
     test = pp.create_durations_for_event_pair(data2, pw.PUMP_ON, pw.PUMP_OFF, "test_on_duration")
     print(test)
+
+
 #    assert test.empty
 
 
@@ -166,9 +168,11 @@ def test_data_generation():
     assert len(pw.gen_random_samples(100)) == 100
 
 
-def test_callbacks():
+@mock.patch("pump_watcher.SumpPump.get_status")
+def test_callbacks(mock_get_status):
     """Test that callbacks can be added to a pump and these are triggered by events"""
     pump = pw.SumpPump(9)  # setup pump on PIN 9
+    mock_get_status.side_effect = [1, 0, 0]  # event order is important (X, Y, Y)
 
     # dummy logger to record events
     class DummyLogger:
@@ -185,7 +189,7 @@ def test_callbacks():
     pump.event()
     assert len(test_logger1.events) == 1  # check only 1 event
     assert test_logger1.events == [
-        [-1]]  # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used
+        [1]]  # Loggers log a list of fields, even if only 1 entry. -1 is the default value if GPIO not used
 
     # add 2 more listeners
     test_logger2 = DummyLogger()
@@ -193,11 +197,20 @@ def test_callbacks():
     test_logger3 = DummyLogger()
     pump.add_listener(test_logger3)
 
-    # simulate an event on PIN 9
-    pump.event(9)
+    # simulate a (different) event
+    pump.event()
     assert len(test_logger1.events) == 2  # check 2 events
-    assert test_logger1.events == [[-1], [-1]]
+    assert test_logger1.events == [[1], [0]]
     assert len(test_logger2.events) == 1
-    assert test_logger2.events == [[-1]]
+    assert test_logger2.events == [[0]]
     assert len(test_logger3.events) == 1
-    assert test_logger3.events == [[-1]]
+    assert test_logger3.events == [[0]]
+
+    # simulate the same event (should skip)
+    pump.event()
+    assert len(test_logger1.events) == 2  # check 2 events
+    assert test_logger1.events == [[1], [0]]
+    assert len(test_logger2.events) == 1
+    assert test_logger2.events == [[0]]
+    assert len(test_logger3.events) == 1
+    assert test_logger3.events == [[0]]

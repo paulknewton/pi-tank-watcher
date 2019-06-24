@@ -1,7 +1,7 @@
 import pytest
 import tank_watcher
 import loggers as ts
-from unittest.mock import Mock
+from mock import Mock
 
 
 class DummySensor:

@@ -1,4 +1,4 @@
-from unittest.mock import Mock
+from mock import Mock
 import loggers
 from functools import partial
 import alarm
