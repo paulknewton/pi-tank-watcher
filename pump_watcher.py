@@ -33,14 +33,14 @@ class SumpPump:
         status = self.get_status(self.pin)
         print("%s: Status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
         
-        if status == prev_status:
+        if status == self.prev_status:
             print("Status did not change. Skipping.")
             return
 
         for l in self.loggers:
             if l:  # ignore empty loggers
                 l.log([status])
-        prev_status = status
+        self.prev_status = status
 
     def get_status(self, pin):
         """Default implementation to return status. Always return -1."""
