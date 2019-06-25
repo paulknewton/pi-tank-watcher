@@ -103,7 +103,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     df = df[-truncate:]
     #print("Truncating to %d entries" % truncate)
     # print(data)
-    print(df)
+    #print(df)
     df.plot(x="time", y="pump")
     plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
