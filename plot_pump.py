@@ -85,11 +85,6 @@ def build_graphs(filename, truncate, show_graphs=False):
     print("Read %d entries" % len(data))
     print(data.dtype.names)
 
-    # truncate data
-    data = data[-truncate:]
-    print("Truncating to %d entries" % len(data))
-    # print(data)
-
     print("Generating graphs...")
 
     if not show_graphs:
@@ -103,7 +98,12 @@ def build_graphs(filename, truncate, show_graphs=False):
     # ---------- FIGURE ----------
     # plot raw data
     df = pd.DataFrame({"time": time, "pump": event})
-    #print(df)
+
+    # truncate data
+    df = df[-truncate:]
+    #print("Truncating to %d entries" % truncate)
+    # print(data)
+    print(df)
     df.plot(x="time", y="pump")
     plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
@@ -111,6 +111,10 @@ def build_graphs(filename, truncate, show_graphs=False):
     # plot durations when pump is on/off
     # df = create_durations_df(list(zip(time, event)))
     on_off_df = create_durations_for_event_pair(data, pw.PUMP_ON, pw.PUMP_OFF, "on_duration")
+
+    # truncate data
+    on_off_df = on_off_df[-truncate:]
+    #print("Truncating to %d entries" % truncate)
     #print(on_off_df)
     ax = on_off_df.plot(kind="bar", linewidth=0)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
@@ -118,6 +122,10 @@ def build_graphs(filename, truncate, show_graphs=False):
 
     off_on_df = create_durations_for_event_pair(data, pw.PUMP_OFF, pw.PUMP_ON, "off_duration")
     off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
+
+    # truncate data
+    off_on_df = off_on_df[-truncate:]
+    #print("Truncating to %d entries" % truncate)
     # print(off_on_df)
     ax = off_on_df.plot(kind="bar", linewidth=0)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
@@ -161,4 +169,4 @@ if __name__ == "__main__":
             writer.writerows(header)
             writer.writerows(data)
 
-    build_graphs(args.filename, 600, args.show)
+    build_graphs(args.filename, 100, args.show)
