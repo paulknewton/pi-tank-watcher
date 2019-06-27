@@ -12,7 +12,7 @@ class WiringPiPump(pump_watcher.SumpPump):
         wiringpi.wiringPiSetupPhys()
 
         wiringpi.pinMode(pin, wiringpi.GPIO.INPUT)
-        #wiringpi.pullUpDnControl(pin, wiringpi.GPIO.PUD_DOWN)
+        wiringpi.pullUpDnControl(pin, wiringpi.GPIO.PUD_OFF)    # use external pull-down resistor
         wiringpi.wiringPiISR(pin, wiringpi.GPIO.INT_EDGE_BOTH, self.event)
 
         # set debounce_timeout_ms=500 ???
