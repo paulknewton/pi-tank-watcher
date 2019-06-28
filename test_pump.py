@@ -171,7 +171,7 @@ def test_data_generation():
 @mock.patch("pump_watcher.SumpPump.get_status")
 def test_callbacks(mock_get_status):
     """Test that callbacks can be added to a pump and these are triggered by events"""
-    pump = pw.SumpPump(9)  # setup pump on PIN 9
+    pump = pw.AbstractPump(9)  # setup pump on PIN 9
     mock_get_status.side_effect = [1, 0, 0]  # event order is important (X, Y, Y)
 
     # dummy logger to record events

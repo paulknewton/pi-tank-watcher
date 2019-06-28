@@ -2,7 +2,7 @@ import wiringpi
 import pump_watcher
 
 
-class WiringPiPump(pump_watcher.SumpPump):
+class WiringPiPump(pump_watcher.AbstractPump):
     """Pump monitor using the Wiring Pi GPIO library"""
 
     def __init__(self, pin):

@@ -10,7 +10,7 @@ PUMP_ON = 1
 PUMP_OFF = 0
 
 
-class SumpPump:
+class AbstractPump:
     """Monitor of a sump pump. Logs when pump is activated/de-activated"""
 
     def __init__(self, pin):
@@ -156,7 +156,7 @@ if __name__ == '__main__':
             pump = pump_wiringpi.WiringPiPump(args.gpio_pin)
     else:
         print("GPIO disabled")
-        pump = SumpPump(args.gpio_pin)
+        pump = AbstractPump(args.gpio_pin)
 
     pump.add_listener(logger)
 
