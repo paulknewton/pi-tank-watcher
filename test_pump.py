@@ -168,7 +168,7 @@ def test_data_generation():
     assert len(pw.gen_random_samples(100)) == 100
 
 
-@mock.patch("pump_watcher.SumpPump.get_status")
+@mock.patch("pump_watcher.AbstractPump.get_status")
 def test_callbacks(mock_get_status):
     """Test that callbacks can be added to a pump and these are triggered by events"""
     pump = pw.AbstractPump(9)  # setup pump on PIN 9
