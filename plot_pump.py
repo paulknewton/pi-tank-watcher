@@ -121,13 +121,13 @@ def build_graphs(filename, truncate, show_graphs=False):
     plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
 
     off_on_df = create_durations_for_event_pair(data, pw.PUMP_OFF, pw.PUMP_ON, "off_duration")
-    off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
+    #off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
 
     # truncate data
     off_on_df = off_on_df[-truncate:]
     #print("Truncating to %d entries" % truncate)
     # print(off_on_df)
-    ax = off_on_df.plot(kind="bar", linewidth=0)
+    ax = off_on_df.plot(kind="bar", linewidth=0, logy=True)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
     plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
 
