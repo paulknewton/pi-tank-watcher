@@ -176,10 +176,11 @@ MATLAB seems like a really powerful framework. My old PhD colleagues were all us
 
 I was so impressed by the libraries in python than I wrote it up in a separate page [here](GRAPHS.md).
 
+I put all of the main graphs into a single dashboard that you can view [here](https://paulknewton.github.io/pi-tank-watcher).
+
 ## Connecting an external sump pump
 The Pi also monitors the sump pump under my house using a custom sump pump controller that I built. This switches a sump pump on and off based on the water-levels under my house, and uses this to fill the rainwater tank. This is described in detail [here](PUMP.md).
 
-That's about it! Now you are good to go! Check your water levels. Use water responsibly.
 
 ---
 # My experiences so far

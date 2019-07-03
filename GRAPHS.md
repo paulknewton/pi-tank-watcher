@@ -86,3 +86,5 @@ You can also get the program to display the graphs as they are calculated:
 ```
 python3 plot_waterdepth.py --show your_data.csv
 ```
+
+I put all of the main graphs into a single dashboard that you can view [here](https://paulknewton.github.io/pi-tank-watcher).
