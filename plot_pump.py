@@ -116,7 +116,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     on_off_df = on_off_df[-truncate:]
     #print("Truncating to %d entries" % truncate)
     #print(on_off_df)
-    ax = on_off_df.plot(kind="bar", linewidth=0)
+    ax = on_off_df.plot(kind="bar", linewidth=0, logy=True)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
     plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
 
