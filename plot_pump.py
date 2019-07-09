@@ -35,13 +35,13 @@ def find_next_duration(data, event1, event2):
     if data is None:  # could not find event
         return None, None, None
     on_event_ts = data[0][0]
-    #print("next event %s @ %s" % (event1, on_event_ts))
+    # print("next event %s @ %s" % (event1, on_event_ts))
 
     data = find_next_event(data[1:], event2)
     if data is None:  # could not find event
         return None, None, None
     off_event_ts = data[0][0]
-    #print("next event %s @ %s" % (event2, off_event_ts))
+    # print("next event %s @ %s" % (event2, off_event_ts))
 
     return on_event_ts, off_event_ts - on_event_ts, data
 
@@ -77,6 +77,22 @@ def thingspeak_str2date(x):
     return datetime.strptime(x.decode("utf-8"), "%Y-%m-%d %H:%M:%S UTC")
 
 
+def plot_durations(df):
+    # print(df)
+    ax = df.plot(kind="bar", linewidth=0, logy=True)
+    ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+
+    # mark mean as horizontal line
+    mean = df.iloc[:, 0].mean()
+    ax.axhline(mean, color='r', linestyle="dashed")
+    ax.text(0, mean, "mean = %d secs" % mean)
+
+    # mark last value
+    last = df.iloc[-1].iat[0]
+    ax.axhline(last, color='r')
+    ax.text(0, last, "last = %d secs" % last)
+
+
 def build_graphs(filename, truncate, show_graphs=False):
     """Generates graphs for pump data. Saves files as .PNG"""
     print("Reading data from %s..." % filename)
@@ -100,38 +116,28 @@ def build_graphs(filename, truncate, show_graphs=False):
     df = pd.DataFrame({"time": time, "pump": event})
 
     # truncate data
+    # print("Truncating to %d entries" % truncate)
     df = df[-truncate:]
-    #print("Truncating to %d entries" % truncate)
-    # print(data)
-    #print(df)
+    # print(df)
     df.plot(x="time", y="pump")
     plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
     # ---------- FIGURE ----------
     # plot durations when pump is on/off
-    # df = create_durations_df(list(zip(time, event)))
     on_off_df = create_durations_for_event_pair(data, pw.PUMP_ON, pw.PUMP_OFF, "on_duration")
 
     # truncate data
     on_off_df = on_off_df[-truncate:]
-    #print("Truncating to %d entries" % truncate)
-    #print(on_off_df)
-    ax = on_off_df.plot(kind="bar", linewidth=0, logy=True)
-    ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+    plot_durations(on_off_df)
     plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
 
+    # ---------- FIGURE ----------
     off_on_df = create_durations_for_event_pair(data, pw.PUMP_OFF, pw.PUMP_ON, "off_duration")
-    #off_on_df['off_duration'] = off_on_df['off_duration'].apply(lambda x: x * -1)  # plot OFF periods as -ve
 
     # truncate data
     off_on_df = off_on_df[-truncate:]
-    #print("Truncating to %d entries" % truncate)
-    # print(off_on_df)
-    ax = off_on_df.plot(kind="bar", linewidth=0, logy=True)
-    ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+    plot_durations(off_on_df)
     plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
-
-    # durations_df = pd.concat([on_off_df, off_on_df], sort=False).sort_index()
 
     if show_graphs:
         plt.show()
@@ -144,7 +150,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     print("stripped percentile durations:", len(on_durations))
     print("mean duration = ", np.mean(on_durations))
     df = pd.DataFrame({"excl. upper/lower percentile pump duration": on_durations})
-    #print(df)
+    # print(df)
     df.plot(kind="bar")
 
     if show_graphs:
