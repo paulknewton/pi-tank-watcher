@@ -4,6 +4,7 @@ import pump_watcher as pw
 import csv
 from numpy import genfromtxt
 from datetime import datetime
+from datetime import timedelta
 import argparse
 import matplotlib
 
@@ -85,12 +86,12 @@ def plot_durations(df):
     # mark mean as horizontal line
     mean = df.iloc[:, 0].mean()
     ax.axhline(mean, color='r', linestyle="dashed")
-    ax.text(0, mean, "mean = %d secs" % mean)
+    ax.text(0, mean, "mean = %s" % str(timedelta(seconds=int(mean))))
 
     # mark last value
     last = df.iloc[-1].iat[0]
     ax.axhline(last, color='r')
-    ax.text(0, last, "last = %d secs" % last)
+    ax.text(0, last, "last = %s" % str(timedelta(seconds=int(last))))
 
 
 def build_graphs(filename, truncate, show_graphs=False):
