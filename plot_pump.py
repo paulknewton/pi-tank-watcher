@@ -80,7 +80,7 @@ def thingspeak_str2date(x):
 
 def plot_durations(df):
     # print(df)
-    ax = df.plot(kind="bar", linewidth=0, logy=True)
+    ax = df.plot(kind="bar", linewidth=0, logy=True, legend=False)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
 
     # mark mean as horizontal line
@@ -120,7 +120,8 @@ def build_graphs(filename, truncate, show_graphs=False):
     # print("Truncating to %d entries" % truncate)
     df = df[-truncate:]
     # print(df)
-    df.plot(x="time", y="pump")
+    df.plot(x="time", y="pump", legend=False)
+    plt.title("Pump activity")
     plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
     # ---------- FIGURE ----------
@@ -130,6 +131,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     # truncate data
     on_off_df = on_off_df[-truncate:]
     plot_durations(on_off_df)
+    plt.title("Pump ON/OFF durations")
     plt.savefig("graphs/fig_pump_durations_on_off.png", bbox_inches="tight")
 
     # ---------- FIGURE ----------
@@ -138,6 +140,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     # truncate data
     off_on_df = off_on_df[-truncate:]
     plot_durations(off_on_df)
+    plt.title("Pump OFF/ON durations")
     plt.savefig("graphs/fig_pump_durations_off_on.png", bbox_inches="tight")
 
     if show_graphs:
@@ -152,7 +155,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     print("mean duration = ", np.mean(on_durations))
     df = pd.DataFrame({"excl. upper/lower percentile pump duration": on_durations})
     # print(df)
-    df.plot(kind="bar")
+    df.plot(kind="bar", legend=False)
 
     if show_graphs:
         plt.show()
