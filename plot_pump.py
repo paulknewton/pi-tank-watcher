@@ -82,6 +82,8 @@ def plot_durations(df):
     # print(df)
     ax = df.plot(kind="bar", linewidth=0, logy=True, legend=False)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
+    ax.set_xlabel("t")
+    ax.set_ylabel("duration")
 
     # mark mean as horizontal line
     mean = df.iloc[:, 0].mean()
@@ -120,7 +122,8 @@ def build_graphs(filename, truncate, show_graphs=False):
     # print("Truncating to %d entries" % truncate)
     df = df[-truncate:]
     # print(df)
-    df.plot(x="time", y="pump", legend=False)
+    ax = df.plot(x="time", y="pump", legend=False)
+    ax.set_ylabel("on/off")
     plt.title("Pump activity")
     plt.savefig("graphs/fig_pump.png", bbox_inches="tight")
 
