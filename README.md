@@ -3,6 +3,9 @@
 
 Raspberry Pi project to monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor, and cross reference these to weather conditions. Logging and trend analysis via the ThingSpeak IoT platform and the python data libraries (pandas, numpy, matplotlib).
 
+* auto-gen TOC:
+{:toc}
+
 ## What is it?
 Flushing toilets. Watering the grass. Cleaning the car.
 
