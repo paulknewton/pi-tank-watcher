@@ -104,7 +104,7 @@ def test_count_simple():
     """Test with simple data"""
     data = [(100, 10, 1), (101, 11, 0), (102, 12, 1), (103, 13, 0)]
     assert pp.count_pump_on(data) == 2
-    assert pp.count_pump_off(data) == 2
+    assert pp.count_pump_off(data) == 3
 
 
 def test_count_empty():
