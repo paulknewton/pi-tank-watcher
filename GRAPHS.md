@@ -1,6 +1,24 @@
 # Analysing data with Python
 
-All of the sensor sampling and data upload is written in Python. But Python also has a very rich set of mathematical libraries and frameworks for analysing the data. The top-level README explains how to run the various programs for logging sensor data. This section describes how the graphs are generated in python.
+All of the sensor sampling and data upload is written in Python. But Python also has a very rich set of mathematical libraries and frameworks for analysing the data. The top-level README explains how to run the various programs for logging sensor data. This file describes how the graphs are generated in python.
+
+<!-- toc -->
+
+- [What does it do?](#what-does-it-do)
+- [Sensor graphs](#sensor-graphs)
+  * [Raw data with some basic mean/std deviation](#raw-data-with-some-basic-meanstd-deviation)
+  * [Data cleaned by dropping readings > 1 std dev](#data-cleaned-by-dropping-readings--1-std-dev)
+  * [Average tank level per day](#average-tank-level-per-day)
+- [Sump Pump graphs](#sump-pump-graphs)
+  * [Raw data](#raw-data)
+  * [Pump running durations](#pump-running-durations)
+- [Weather graphs](#weather-graphs)
+  * [Weather data correlations](#weather-data-correlations)
+  * [Humidity vs. Temperature](#humidity-vs-temperature)
+- [How does the code work?](#how-does-the-code-work)
+- [How do I run it?](#how-do-i-run-it)
+
+<!-- tocstop -->
 
 ## What does it do?
 There are 3 programs:
