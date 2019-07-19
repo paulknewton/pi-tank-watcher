@@ -3,8 +3,32 @@
 
 Raspberry Pi project to monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor, and cross reference these to weather conditions. Logging and trend analysis via the ThingSpeak IoT platform and the python data libraries (pandas, numpy, matplotlib).
 
-{{TOC}}
 =======
+
+<!-- toc -->
+
+  * [What is it?](#what-is-it)
+  * [Raspberry Pi & the HCSR04 sensor](#raspberry-pi--the-hcsr04-sensor)
+    + [Installing the sensor](#installing-the-sensor)
+    + [The sensor code](#the-sensor-code)
+    + [Setup ThingSpeak](#setup-thingspeak)
+    + [Installing and running the code](#installing-and-running-the-code)
+  * [The Raspberry Pi LCD](#the-raspberry-pi-lcd)
+  * [Tracking the weather data](#tracking-the-weather-data)
+    + [Setup ThingSpeak](#setup-thingspeak-1)
+    + [Reading weather data from Accuweather](#reading-weather-data-from-accuweather)
+    + [Logging the weather data](#logging-the-weather-data)
+  * [Analysing the data](#analysing-the-data)
+    + [ThingSpeak & MATLAB](#thingspeak--matlab)
+    + [Python: Numpy, Pandas & Matplotlib](#python-numpy-pandas--matplotlib)
+  * [Connecting an external sump pump](#connecting-an-external-sump-pump)
+- [My experiences so far](#my-experiences-so-far)
+- [The files](#the-files)
+
+<!-- tocstop -->
+
+=======
+
 
 ## What is it?
 Flushing toilets. Watering the grass. Cleaning the car.
