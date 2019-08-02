@@ -88,7 +88,7 @@ def plot_durations(df):
     # mark mean as horizontal line
     mean = df.iloc[:, 0].mean()
     ax.axhline(mean, color='r', linestyle="dashed")
-    ax.text(0, mean, "mean = %s" % str(timedelta(seconds=int(mean))))
+    #ax.text(0, mean, "mean = %s" % str(timedelta(seconds=int(mean))))
 
     # mark last value
     last = df.iloc[-1].iat[0]
