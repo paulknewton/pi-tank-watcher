@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/paulknewton/pi-tank-watcher.svg?branch=master)](https://travis-ci.org/paulknewton/pi-tank-watcher)
 # pi-tank-watcher
 
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/pi-tank-watcher/?ref=repository-badge)
+
 Raspberry Pi project to monitor water depth in a rainwater tank using a HC-SR04 ultrasound sensor, and cross reference these to weather conditions. Logging and trend analysis via the ThingSpeak IoT platform and the python data libraries (pandas, numpy, matplotlib).
 
 ---
