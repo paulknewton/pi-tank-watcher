@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/paulknewton/pi-tank-watcher.svg?branch=master)](https://travis-ci.org/paulknewton/pi-tank-watcher)
+[![codecov](https://codecov.io/gh/paulknewton/pi-tank-watcher/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/pi-tank-watcher)
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/pi-tank-watcher/?ref=repository-badge)
 
