@@ -79,8 +79,8 @@ def log_water_depth(sensor, loggers, sensor_height):
     print("-- stdev = %f" % stdev)
     median = statistics.median(samples)
     print("-- median = %f" % median)
-    clean_data = [x for x in samples if (x > median - 1 * stdev)]
-    clean_data = [x for x in clean_data if (x < median + 1 * stdev)]
+    clean_data = [x for x in samples if x > median - 1 * stdev]
+    clean_data = [x for x in clean_data if x < median + 1 * stdev]
     print("-- len samples = %d; len clean_data = %d" % (len(samples), len(clean_data)))
 
     # calculate mean measurement
