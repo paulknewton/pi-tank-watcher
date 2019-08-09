@@ -17,7 +17,8 @@ if __name__ == '__main__':
     print(args)
 
     # locationKey = "1037757"  # niederdonven
-    weatherUrl = "http://dataservice.accuweather.com/currentconditions/v1/" + args.location_key + "?apikey=" + args.accuweather_api + "&details=true"
+    weatherUrl = "http://dataservice.accuweather.com/currentconditions/v1/" + args.location_key + "?apikey=" + \
+                 args.accuweather_api + "&details=true"
     weather_data = requests.get(weatherUrl).json()[0]
 
     temperature = weather_data['Temperature']['Metric']['Value']

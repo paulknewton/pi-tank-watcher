@@ -49,7 +49,7 @@ def build_graphs(filename, show_graphs=False):
     subplots_cols = 3
     subplots_rows = math.ceil(len(pairs) / subplots_cols)
     print("Graph layout (%d, %d)" % (subplots_rows, subplots_cols))
-    fig, axs = plt.subplots(subplots_rows, subplots_cols, figsize=(15,8))
+    _fig, axs = plt.subplots(subplots_rows, subplots_cols, figsize=(15, 8))
 
     # iterate over each ax and plot the data pair
     for ax, (data_x, data_y) in zip(axs.flat, pairs):

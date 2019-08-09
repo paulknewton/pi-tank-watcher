@@ -1,8 +1,8 @@
 import RPi.GPIO
-from pump_watcher import SumpPump
+from pump_watcher import AbstractPump
 
 
-class RpiGpioPump(SumpPump):
+class RpiGpioPump(AbstractPump):
     """Pump monitor using the RPi.GPIO library"""
 
     def __init__(self, pin):

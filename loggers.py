@@ -25,8 +25,8 @@ class ThingSpeak:
         """
 
         url = "https://api.thingspeak.com/update?api_key=" + self.api_key
-        for i in range(0, len(event)):
-            url += "&field%d=%s" % (i + 1, event[i])
+        for i, field in enumerate(event):
+            url += "&field%d=%s" % (i + 1, field)
         if not self.test_mode:
             urlopen(url)
 
@@ -43,9 +43,7 @@ class AlarmClock:
 
     def __init__(self):
         """
-        Initialise an AlarmClock from another logger.
-
-        :param logger: the logger to be used each time an event is logged (if None then ignored)
+        Initialise an AlarmClock
         """
         self.events = []
         self.alarms = []

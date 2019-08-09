@@ -173,8 +173,8 @@ def drop_1_rolling_std_from_rolling_mean(df):
 
 
 def drop_1_rolling_std_from_rolling_min(df):
-    min_win_size = 50  # Number of samples to include in sample. Too small and it will get distorted by periods of false readings. Too large and it will over-strip values.
-    tolerance = 10  # Increase/decrease (cm) permitted compared to rolling minimum. Too small will prevent larger changes.
+    min_win_size = 50   # Number of samples to include in sample. Too small and it will get distorted by periods of false readings. Too large and it will over-strip values.
+    tolerance = 10      # Increase/decrease (cm) permitted compared to rolling minimum. Too small will prevent larger changes.
 
     rolling_min = df.rolling(window=min_win_size).min()
     # print(df.to_string())

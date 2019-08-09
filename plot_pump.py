@@ -20,8 +20,8 @@ def count_pump_off(data):
 
 
 def find_next_event(data, event_type):
-    for i in range(0, len(data)):
-        if int(data[i][2]) == event_type:
+    for i, event in enumerate(data):
+        if int(event[2]) == event_type:
             return data[i:]
 
 
@@ -112,7 +112,7 @@ def build_graphs(filename, truncate, show_graphs=False):
     import seaborn as sns
     sns.set(style="dark")
 
-    time, sample_id, event = zip(*data)  # unpack to positional args --> unzip
+    time, _sample_id, event = zip(*data)  # unpack to positional args --> unzip
 
     # ---------- FIGURE ----------
     # plot raw data
@@ -149,6 +149,8 @@ def build_graphs(filename, truncate, show_graphs=False):
     if show_graphs:
         plt.show()
     return
+
+    # do not create these graphs
 
     # ---------- FIGURE ----------
     # drop upper/lower percentiles

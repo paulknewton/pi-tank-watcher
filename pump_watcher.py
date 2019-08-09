@@ -21,18 +21,18 @@ class AbstractPump:
 
         # store the pin for use in the callback
         self.pin = pin
-        
+
         # used to prevent duplicate events (pull-down resistor does not fix it)
         self.prev_status = None
 
-    def event(self, *args):
+    def event(self, *_args):
         """
         Callback to log an event change to the configured loggers.
         Uses variable args because different GPIO libraries invoke with different parameters
         """
         status = self.get_status(self.pin)
         print("%s: Status on pin %d --> %s" % (datetime.datetime.now(), self.pin, status))
-        
+
         if status == self.prev_status:
             print("Status did not change. Skipping.")
             return
@@ -42,14 +42,18 @@ class AbstractPump:
                 l.log([status])
         self.prev_status = status
 
-    def get_status(self, pin):
+    def get_status(self, _pin):
         """Default implementation to return status. Always return -1."""
         return -1
 
-    def add_listener(self, logger):
-        """Add a listener to be called when the pump is enabled/disabled. Can add multiple listeners to be called in sequence."""
+    def add_listener(self, new_logger):
+        """
+        Add a listener to be called when the pump is enabled/disabled.
+        Can add multiple listeners to be called in sequence.
+        :param new_logger the logger to add
+        """
         print("Registering listener")
-        self.loggers.append(logger)
+        self.loggers.append(new_logger)
 
     def cleanup(self):
         pass
@@ -70,7 +74,7 @@ def gen_random_samples(length):
 
         # get a PUMP_ON event
         event = gen_mainly_on()
-        if (event == PUMP_ON):
+        if event == PUMP_ON:
             # timestamp is assumed to be at least 45 mins since last PUMP_OFF + random(100 minutes)
             ts += datetime.timedelta(0, 45 * 60) + datetime.timedelta(0, random.randint(0, 100 * 60))
             data.append([ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event])
@@ -80,7 +84,7 @@ def gen_random_samples(length):
             pass
 
         event = gen_mainly_off()
-        if (event == PUMP_OFF):
+        if event == PUMP_OFF:
             # pump is assumed to be on for random(10 minutes)
             ts = ts + datetime.timedelta(0, random.randint(0, 10 * 60))
             data.append((ts.strftime("%Y-%m-%d %H:%M:%S UTC"), sample_id, event))
@@ -94,15 +98,17 @@ def gen_random_samples(length):
 
 
 def gen_random_event(threshold):
-    """Generate a random event (PUMP_ON or PUMP_OFF). The event is chosen randomly, but the threshold defines the probability. 1 means always off, 0 means always on.
+    """
+    Generate a random event (PUMP_ON or PUMP_OFF).
+    The event is chosen randomly, but the threshold defines the probability. 1 means always off, 0 means always on.
+
     :param threshold: the value used to determine the generated event type. Values < threshold = PUMP_OFF; Values >= threshold = PUMP_ON
-    :return:
+    :return PUMP_ON or PUMP_OFF
     """
     r = random.random()
     if r >= threshold:
         return PUMP_ON
-    else:
-        return PUMP_OFF
+    return PUMP_OFF
 
 
 def gen_mainly_on():
@@ -143,6 +149,7 @@ if __name__ == '__main__':
     print("Connecting to pin %s" % args.gpio_pin)
 
     # --- Create the pump monitor
+    pump = None
     if args.gpio_lib:
         if args.gpio_lib == "RPi.GPIO":
             import pump_rpio_gpio

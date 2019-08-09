@@ -121,7 +121,10 @@ def test_count_noisy_data(setup):
 
 
 def test_durations_simple(setup):
-    """Test when data starts cleanly with a single ON event, and ends cleanly with a single OFF event (may include noise in between)"""
+    """
+    Test when data starts cleanly with a single ON event, and ends cleanly with a single OFF event (may include
+    noise in between)
+    """
     data = setup
     test = pp.create_durations_for_event_pair(data[:-8], pw.PUMP_ON, pw.PUMP_OFF, "values")["values"].tolist()
     target = [40.0, 63.0, 59.0, 64.0, 64.0, 63.0, 63.0, 63.0, 63.0, 64.0, 58.0, 64.0]
@@ -132,7 +135,7 @@ def test_durations_with_strings(setup):
     """Test when on/off events are stored as strings"""
     data = setup
     events_as_strings = [(time, str(event_id), str(event)) for time, event_id, event in data]
-    test = pp.create_durations_for_event_pair(data[:-8], pw.PUMP_ON, pw.PUMP_OFF, "values")["values"].tolist()
+    test = pp.create_durations_for_event_pair(events_as_strings[:-8], pw.PUMP_ON, pw.PUMP_OFF, "values")["values"].tolist()
     target = [40.0, 63.0, 59.0, 64.0, 64.0, 63.0, 63.0, 63.0, 63.0, 64.0, 58.0, 64.0]
     assert test == target
 

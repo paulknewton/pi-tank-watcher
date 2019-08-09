@@ -61,11 +61,12 @@ def log_water_depth(sensor, loggers, sensor_height):
     Arithmetic mean of the remaining samples is calculated to 2 decimal places.
 
     :param sensor: the sensor to read
-    :param logger: single logger or a list of loggers to record the reading
+    :param loggers: single logger or a list of loggers to record the reading
     :param sensor_height: height of the sensor above the tank
     """
 
-    if type(loggers) is not list: loggers = [loggers]
+    if type(loggers) is not list:
+        loggers = [loggers]
 
     num_measures = 20
     samples = []
