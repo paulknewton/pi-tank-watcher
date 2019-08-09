@@ -140,6 +140,12 @@ def build_graphs(data, show_graphs=False):
     for label in ax.xaxis.get_ticklabels():
         if label not in visible:
             label.set_visible(False)
+
+    # mark last value
+    last = df.iloc[-1].iat[0]
+    ax.axhline(last, color='r')
+    ax.text(0, last, "last = %.2fcm" % last)
+
     plt.savefig("graphs/fig_avg_daily.png", bbox_inches='tight')
 
     # show graphs?
