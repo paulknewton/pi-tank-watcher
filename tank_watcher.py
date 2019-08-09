@@ -96,6 +96,7 @@ def log_water_depth(sensor, loggers, sensor_height):
     else:
         print("Skipping -ve water depth (%s cm)" % water_depth)
 
+
 if __name__ == '__main__':
     # read command-line args
     parser = argparse.ArgumentParser(
