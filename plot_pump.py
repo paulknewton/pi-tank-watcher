@@ -212,7 +212,10 @@ def build_graphs(filename, truncate, show_graphs=False):
 
 
 def main():
-    # read command-line args
+    """
+    Read ThingSpeak data and build graphs.
+    Supports multiple cmd-line args
+    """
     parser = argparse.ArgumentParser(description='Analyses data from ThinkSpeak.com and generates graphs.')
     parser.add_argument('filename', help='file to process')
     parser.add_argument('--show', dest='show', action='store_true', default=False,
