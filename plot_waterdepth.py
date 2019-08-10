@@ -8,6 +8,12 @@ import pandas as pd
 
 
 def read_data(filename):
+    """
+    Read waterdepth data from .csv file
+
+    :param filename: the log data
+    :return: a tuple of the form x,y where x and y are lists of time and depth values
+    """
     print("Reading data from %s..." % filename)
     with open(filename, "rt") as csvfile:
         rdr = csv.reader(csvfile)
@@ -25,6 +31,12 @@ def read_data(filename):
 
 
 def build_graphs(data, show_graphs=False):
+    """
+    Build graphs from log data
+
+    :param data: a tuple of x,y data sets where x and y are lists of time and depth values
+    :param show_graphs: toggle the interactive display of the graphs (true) or only save the graphs as PNG files (false)
+    """
     """Generates graphs for data (of the form x,y). Saves files as .PNG"""
     print("Generating graphs...")
     x, y = data
@@ -114,7 +126,7 @@ def build_graphs(data, show_graphs=False):
     # drop values outside rolling min
     df = pd.DataFrame({"time": x, "depth": y})
     df.set_index("time", inplace=True)
-    df = drop_1_rolling_std_from_rolling_min(df)
+    df = drop_distance_from_rolling_min(df)
     # print(df.to_string())
     df.plot()
     init_plot("Cleaned sensor values (rolling min +/-)", "date", "depth")
@@ -156,6 +168,14 @@ def build_graphs(data, show_graphs=False):
 
 
 def init_plot(title, xlabel, ylabel):
+    """
+    Setup each plot with standard labels, title etc.
+
+    :param title: title to place at the top of the graph
+    :param xlabel: x axis label
+    :param ylabel: y axis label
+    :return:
+    """
     import matplotlib.pyplot as plt
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
@@ -164,12 +184,24 @@ def init_plot(title, xlabel, ylabel):
 
 
 def drop_1std_from_mean(df):
+    """
+    Drop all values that fall outside +/- 1 std dev from the mean
+
+    :param df: dataframe containing the time and depth data
+    :return: the filtered dataframe with dropped values removed
+    """
     mean = df.mean()["depth"]
     std = df.std()["depth"]
     return df[df["depth"].between(mean - std, mean + std)]
 
 
 def drop_1_rolling_std_from_rolling_mean(df):
+    """
+    Drop all values that fall outside +/- 1 std dev from the rolling mean (calculated with window of 50 values)
+
+    :param df: dataframe containing the time and depth data
+    :return: the filtered dataframe with dropped values removed
+    """
     win_size = 50
     rolling_mean = df.rolling(window=win_size).mean()
     rolling_std = df.rolling(window=win_size).std()
@@ -178,13 +210,17 @@ def drop_1_rolling_std_from_rolling_mean(df):
         df["depth"].between(rolling_mean["depth"] - rolling_std["depth"], rolling_mean["depth"] + rolling_std["depth"])]
 
 
-def drop_1_rolling_std_from_rolling_min(df):
+def drop_distance_from_rolling_min(df):
+    """
+    Drop all values that fall outside a fixed distance from the rolling mean (uses 10cm as tolerance)
+
+    :param df: dataframe containing the time and depth data
+    :return: the filtered dataframe with dropped values removed
+    """
     min_win_size = 50   # Number of samples to include in sample. Too small and it will get distorted by periods of false readings. Too large and it will over-strip values.
     tolerance = 10      # Increase/decrease (cm) permitted compared to rolling minimum. Too small will prevent larger changes.
 
     rolling_min = df.rolling(window=min_win_size).min()
-    # print(df.to_string())
-    # print(rolling_min.to_string())
 
     return df[
         df["depth"].between(rolling_min["depth"] - tolerance, rolling_min["depth"] + tolerance)]

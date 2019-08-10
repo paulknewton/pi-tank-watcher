@@ -10,16 +10,34 @@ import matplotlib
 
 
 def count_pump_on(data):
+    """
+    Count how many times a PUMP_ON event occurs in the data
+
+    :param data: list of tuples, of the form (datetime, int)
+    :return: number of occurrances of PUMP_ON
+    """
     # cast to int in case the data is some other type
     return len([d for d in data if int(d[2]) == pw.PUMP_ON])
 
 
 def count_pump_off(data):
+    """
+    Count how many times a PUMP_OFF event occurs in the data
+
+    :param data: list of tuples, of the form (datetime, int)
+    :return: number of occurrances of PUMP_OFF
+    """
     # cast to int in case the data is some other type
     return len([d for d in data if int(d[2]) == pw.PUMP_OFF])
 
 
 def find_next_event(data, event_type):
+    """
+    Find the next sequence within data starting with event_type
+
+    :param data: list of tuples, of the form (datetime, int)
+    :return: subset of data starting with event_type
+    """
     for i, event in enumerate(data):
         if int(event[2]) == event_type:
             return data[i:]
@@ -51,6 +69,16 @@ def find_next_duration(data, event1, event2):
 
 
 def create_durations_for_event_pair(data, event1, event2, col, strip_outliers=False):
+    """
+    Calculate durations of pump on/off.
+
+    :param data: list of tuples, of the form (datetime, int)
+    :param event1: event type to start the duration
+    :param event2: event type to end the duration
+    :param col: label for the durations column to use in the returned dataframe
+    :param strip_outliers: if true then ignore values +/- 1 std dev from the arithmetic mean
+    :return: dataframe containing time of each event1 and the duration for the event1-event2 pair
+    """
     durations = []
 
     while data is not None:
@@ -77,11 +105,21 @@ def create_durations_for_event_pair(data, event1, event2, col, strip_outliers=Fa
 
 
 def thingspeak_str2date(x):
-    """Convert string in ThingSpeak files to datetime"""
+    """
+    Convert string in ThingSpeak files to datetime
+
+    :param x: the string to convert to a data of the form %Y-%m-%d %H:%M:%S UTC
+    :return a datetime representing x
+    """
     return datetime.strptime(x.decode("utf-8"), "%Y-%m-%d %H:%M:%S UTC")
 
 
 def plot_durations(df):
+    """
+    Plot a graph of durations (can be ON-OFF or OFF-ON)
+
+    :param df: dataframe containing time of each event1 and the duration for the event1-event2 pair
+    """
     # print(df)
     ax = df.plot(kind="bar", linewidth=0, logy=True, legend=False)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
@@ -100,7 +138,11 @@ def plot_durations(df):
 
 
 def build_graphs(filename, truncate, show_graphs=False):
-    """Generates graphs for pump data. Saves files as .PNG"""
+    """
+    Generate graphs for pump data and save files as .PNG
+
+    :param show_graphs if true then show each graph interactively (as well as saving as PNG)
+    """
     print("Reading data from %s..." % filename)
 
     data = genfromtxt(filename, delimiter=",", dtype=None, names=True, converters={0: thingspeak_str2date})
