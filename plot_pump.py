@@ -31,6 +31,8 @@ def find_next_duration(data, event1, event2):
     Get the duration of the next event1/event2 combination.
 
     :param data: list of tuples, of the form (datetime, int)
+    :param event1: the event that starts the matching of the pattern
+    :param event2: the event that ends the matching of the pattern
     :return tuple of the form (datetime, float, data) where datetime is the timestamp when event1 occurred, float is the duration between the next event1/event2 (in secs), and the remaining data with event1/event2 removed
     """
     data = find_next_event(data, event1)
@@ -167,7 +169,7 @@ def build_graphs(filename, truncate, show_graphs=False):
         plt.show()
 
 
-if __name__ == "__main__":
+def main():
     # read command-line args
     parser = argparse.ArgumentParser(description='Analyses data from ThinkSpeak.com and generates graphs.')
     parser.add_argument('filename', help='file to process')
@@ -186,3 +188,7 @@ if __name__ == "__main__":
             writer.writerows(data)
 
     build_graphs(args.filename, 100, args.show)
+
+
+if __name__ == "__main__":
+    main()
