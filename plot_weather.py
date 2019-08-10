@@ -11,7 +11,9 @@ def build_graphs(filename, show_graphs=False):
     """Generates graphs for data (of the form x,y). Saves files as .PNG"""
     print("Reading data from %s..." % filename)
 
-    str2date = lambda x: datetime.strptime(x.decode("utf-8"), "%Y-%m-%d %H:%M:%S UTC")
+    def str2date(d):
+        return datetime.strptime(d.decode("utf-8"), "%Y-%m-%d %H:%M:%S UTC")
+
     data = genfromtxt(filename, delimiter=",", dtype=None, names=True, converters={0: str2date})
     print(data.dtype.names)
 
