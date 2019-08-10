@@ -42,7 +42,8 @@ class AbstractPump:
                 l.log([status])
         self.prev_status = status
 
-    def get_status(self, _pin):
+    @staticmethod
+    def get_status(_pin):
         """Default implementation to return status. Always return -1."""
         return -1
 
