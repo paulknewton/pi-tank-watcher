@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/paulknewton/pi_tank_watcher.svg?branch=master)](https://travis-ci.org/paulknewton/pi_tank_watcher)
 [![codecov](https://codecov.io/gh/paulknewton/pi_tank_watcher/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/pi_tank_watcher)
+[![pyup](https://pyup.io/repos/github/paulknewton/pi_tank_watcher/shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi_tank_watcher)
+[![python3](https://pyup.io/repos/github/paulknewton/pi_tank_watcher/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi_tank_watcher)
 
 [![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/pi_tank_watcher/?ref=repository-badge)
 
@@ -106,8 +108,9 @@ Each time the progrm runs, it records the water level on the channel. You can th
 1. Install the other python libraries (if you are using a virtualenv, then drop the 'sudo'):
 ```
     cd pi-tank-watcher
+    pip install -r requirements_dev.txt
     pip install -r requirements.txt
-````
+```
 1. Modify the pin settings in pi_tank_watcher.py. These need to match the pins where you connected your sendor (default values may be OK: 23 for the trigger; 24 for the echo)
     ```
     hcsr04_sensor = Hcsr04Sensor(23, 24)
