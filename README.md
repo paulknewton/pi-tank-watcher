@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.org/paulknewton/pi_tank_watcher.svg?branch=master)](https://travis-ci.org/paulknewton/pi_tank_watcher)
-[![codecov](https://codecov.io/gh/paulknewton/pi_tank_watcher/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/pi_tank_watcher)
-[![pyup](https://pyup.io/repos/github/paulknewton/pi_tank_watcher/shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi_tank_watcher)
-[![python3](https://pyup.io/repos/github/paulknewton/pi_tank_watcher/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi_tank_watcher)
+[![Build Status](https://travis-ci.org/paulknewton/pi-tank-watcher.svg?branch=master)](https://travis-ci.org/paulknewton/pi-tank-watcher)
+[![codecov](https://codecov.io/gh/paulknewton/pi-tank-watcher/branch/master/graph/badge.svg)](https://codecov.io/gh/paulknewton/pi-tank-watcher)
+[![pyup](https://pyup.io/repos/github/paulknewton/pi-tank-watcher/shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi-tank-watcher)
+[![python3](https://pyup.io/repos/github/paulknewton/pi-tank-watcher/python-3-shield.svg)](https://pyup.io/account/repos/github/paulknewton/pi-tank-watcher)
 
-[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/pi_tank_watcher/?ref=repository-badge)
+[![DeepSource](https://static.deepsource.io/deepsource-badge-light.svg)](https://deepsource.io/gh/paulknewton/pi-tank-watcher/?ref=repository-badge)
 
 # pi-tank-watcher
 
