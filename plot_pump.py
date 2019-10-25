@@ -121,7 +121,7 @@ def plot_durations(df):
     :param df: dataframe containing time of each event1 and the duration for the event1-event2 pair
     """
     # print(df)
-    ax = df.plot(kind="bar", linewidth=0, logy=True, legend=False)
+    ax = df.plot(kind="bar", linewidth=0, logy=False, legend=False)
     ax.get_xaxis().set_ticks([])  # need to clear xticks here (cannot set in .plot function)
     ax.set_xlabel("t")
     ax.set_ylabel("duration")
