@@ -226,11 +226,12 @@ The sensor has been running for some time now (since Feb/March 2019), so I thoug
 
 
 *Summer Readings:*
+Near perfect...
 
 ![sensor_summer](img/sensor_summer.png)
 
 *Winter Readings:*
-
+Unusable...
 
 ![sensor_winter](img/sensor_winter.png)
 
