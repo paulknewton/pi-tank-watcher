@@ -152,7 +152,7 @@ if __name__ == '__main__':
     # add a logger to HealthChecks.io if defined
     if args.healthchecks_url:
         print("Adding HealthChecks logger (URL %s)" % args.healthchecks_url)
-        all_loggers.append(loggers.HealthChecks(args.thing_speak_url))
+        all_loggers.append(loggers.HealthChecks(args.healthchecks_url))
 
     print("Connecting to pin %s" % args.gpio_pin)
 
