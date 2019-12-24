@@ -131,21 +131,28 @@ if __name__ == '__main__':
     parser.add_argument("gpio_pin", help="GPIO pin connected to the pump", type=int)
     parser.add_argument("--thingspeak", dest="thing_speak_api",
                         help="API key to write new sensor readings to thingspeak.com channel")
+    parser.add_argument("--healthchecks", dest="healthchecks_url",
+                        help="healthchecks.io URL to ping when pump is activated")
     parser.add_argument("--gpio", help="GPIO library to use implementation", type=str, choices=["RPi.GPIO", "wiringpi"],
                         dest="gpio_lib", default=None)
     args = parser.parse_args()
     print(args)
 
     # --- Setup where to log the data
-    logger = None
+    all_loggers = []
 
-    # add a logger to ThingSpeak if defined, otherwise print to console
+    # add a logger to ThingSpeak if defined
     if args.thing_speak_api:
         print("Adding ThingSpeak logger (API key %s)" % args.thing_speak_api)
-        logger = loggers.ThingSpeak(args.thing_speak_api)
+        all_loggers.append(loggers.ThingSpeak(args.thing_speak_api))
     else:
         print("Adding console logger")
-        logger = loggers.ConsoleLogger()
+        all_loggers.append(loggers.ConsoleLogger())
+
+    # add a logger to HealthChecks.io if defined
+    if args.healthchecks_url:
+        print("Adding HealthChecks logger (URL %s)" % args.healthchecks_url)
+        all_loggers.append(loggers.HealthChecks(args.thing_speak_url))
 
     print("Connecting to pin %s" % args.gpio_pin)
 
@@ -166,7 +173,9 @@ if __name__ == '__main__':
         print("GPIO disabled")
         pump = AbstractPump(args.gpio_pin)
 
-    pump.add_listener(logger)
+    # add all the loggers setup previously
+    for logger in all_loggers:
+        pump.add_listener(logger)
 
     try:
         print("Waiting for events...")

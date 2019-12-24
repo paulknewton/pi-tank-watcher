@@ -1,5 +1,28 @@
 from urllib.request import urlopen
 
+class HealthChecks:
+    """Ping a HealthChecks.io URL for each event"""
+
+    def __init__(self, url, test_mode=False):
+        """
+        Setup a logger with the specified URL
+
+        :param url: the URL to log to on each event
+        """
+        self.url = url
+        self.test_mode = test_mode
+
+    def log(self, event):
+        """
+        Log the event to the specified URL via GET method
+
+        :param event: the event
+        """
+        print("Logging to %s:" % self.url)
+        print("Event: %s" % event)
+
+        if not self.test_mode:
+            urlopen(self.url)
 
 class ThingSpeak:
     """ThingSpeak channel used to log pump on/off events"""
