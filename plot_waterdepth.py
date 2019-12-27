@@ -154,9 +154,11 @@ def build_graphs(data, show_graphs=False):
             label.set_visible(False)
 
     # mark last value
-    last = df.iloc[-1].iat[0]
-    ax.axhline(last, color='r')
-    ax.text(0, last, "last = %.2fcm" % last)
+    last_row = df.iloc[-1]
+    last_depth = last_row.iat[0]
+    last_ts = last_row.name
+    ax.axhline(last_depth, color='r')
+    ax.text(0, last_depth, "last = %.2fcm @ %s" % (last_depth, last_ts))
 
     plt.savefig("graphs/fig_avg_daily.png", bbox_inches='tight')
 

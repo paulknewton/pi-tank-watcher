@@ -132,9 +132,11 @@ def plot_durations(df):
     # ax.text(0, mean, "mean = %s" % str(timedelta(seconds=int(mean))))
 
     # mark last value
-    last = df.iloc[-1].iat[0]
-    ax.axhline(last, color='r')
-    ax.text(0, last, "last = %s" % str(timedelta(seconds=int(last))))
+    last_row = df.iloc[-1]
+    last_duration = last_row.iat[0]
+    last_ts = last_row.name
+    ax.axhline(last_duration, color='r')
+    ax.text(0, last_duration, "last = %s @ %s" % (str(timedelta(seconds=int(last_duration))), last_ts))
 
 
 def build_graphs(filename, truncate, show_graphs=False):
