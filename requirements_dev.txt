@@ -2,4 +2,4 @@ mock>=3.0.5
 pytest>=4.6.5
 pytest-cov>=2.7.1
 coverage>=4.5.4
-codecov==2.0.15
+codecov==2.0.16
