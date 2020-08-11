@@ -108,8 +108,21 @@ I decided to add an output signal to the controller which I could connect to a R
 
 ![pi](img/pi.jpg)
 
-The code monitors the GPIO PIN (via interrupts to avoid endlessly looping). Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
+The code monitors the GPIO PIN (via interrupts to avoid endlessly looping).
+In my setup, the activation of the pump triggers a high signal to the raspberry Pi, connected to pin 22 on the Model B (referred to as GPIO6). The ground is just connected to any of the GND pins on the Pi.
 
+Start the code that monitors the pump:
+
+``
+python3 pump_watcher.py --thingspeak YOUR_THINGSPEAK_API --gpio wiringpi 22 --healthchecks HEALTHCHECKS_URL
+``
+
+Note how you need to pass in a bunch of parameters here:
+
+* thingspeak - the key you are using for Thingspeak to log the pump on/off events. Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
+* gpio - the GPIO library used to interface with the GPIO pins. Supported values are ``RPi.GPIO`` or ``wiringpi``.
+* 22 - the number of the pin that will be monitored. When the pump switches on, a high signal will be sent to this pin. If you are using another pin, then change this argument to suit (note how I am using the physical pin number here, not the BCM label or some other label. In this exampoe, I am using pin 22 which is the pin referred to as "GPIO.6".
+ 
 This is the pump activity I have been seeing:
 
 ![fig_pump](graphs/fig_pump.png)

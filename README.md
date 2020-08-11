@@ -74,10 +74,31 @@ I have quite a few pipes and cables dangling around the top of my rainwater tank
 
 ![Sensor wiring](img/sensor.jpg)
 
+There are 4 pins on the sensor - each labelled - and these need to be connected to the GPIO header pins on the Raspberry Pi. 
+The GPIO pin layout has changed slightly over the various iterations of the Pi so be careful.
+There are also different ways of referring to GPIO pins so be careful that you know which labelling scheme is being used.
+
+I am using an old Model B, but you just need to make sure things are connected as follows:
+
+* Vcc - this powers the sensor and needs to be connected to the +5V pin on the Pi. This is pin 2 or 4 on the original Model B and the newer Model B+.
+* Trig - this triggers the outgoing pulse and needs to be connected to the pin referred to as "BCM 23" in the BCM numbering scheme (you will see why I am mentioning the BCM labelling shortly). On the Model B/B+, this is known as "GPIO.4" and is found on pin 16.
+* Echo - this captures the returning wave that bounces of the object we are pointing at. This needs to be connected to BCM pin 24, known as "GPIO.5" and found at pin 18 on the Model B/B+.
+* GND - this is the ground (0v) connection used to close the circuit. It is available on pins 6, 9, 14, 20 and 25 on the Model B. The Model B+ has even more.  
+
+The Vcc and GND pins are not important - just find any +5V or GND connections.
+The trigger and echo pins are important because they are configured directly in the code.
+If you don't use GPIO23 and GPIO24, then you need to change the ``tank_watcher.py`` code:
+
+``
+hcsr04_sensor = Hcsr04Sensor(23, 24)
+``
+
+Note how the 23 and 24 are using the BCM numbering scheme, not the physical pin layout (or any other labelling scheme used by the GPIO interfacing libraries).
+
 ### The sensor code
 The basic script to trigger the sensor and take a measurement is taken pretty much from the tutorials above, or any of the other tutorials out there on the web. It triggers an echo signal then measures how long it has to wait for the signal to return. The wave speed is fixed, so you can work out the distance travelled. This is suprisingly reliable.
 
-The code has configurable values for the GPIO pins being used. If you are following the tutorial above then the pin values are fine. Otherwise you may need to modify them.
+The code has configurable values for the GPIO pins being used as mentioned above. If you are sticking to the wiring layout above then the pin values are fine. Otherwise you will need to modify them.
 
 I noticed that the readings did vary on occasion, so I extended the program to take multiple readings then calculate the arithmetic mean. The sensor can occasionally give a bad reading, so I added some code to remove outliers (anything greater than 1 standard deviation from the median is stripped out).
 
