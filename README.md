@@ -82,12 +82,12 @@ I am using an old Model B, but you just need to make sure things are connected a
 
 * Vcc - this powers the sensor and needs to be connected to the +5V pin on the Pi. This is pin 2 or 4 on the original Model B and the newer Model B+.
 * Trig - this triggers the outgoing pulse and needs to be connected to the pin referred to as "BCM 23" in the BCM numbering scheme (you will see why I am mentioning the BCM labelling shortly). On the Model B/B+, this is known as "GPIO.4" and is found on pin 16.
-* Echo - this captures the returning wave that bounces of the object we are pointing at. This needs to be connected to BCM pin 24, known as "GPIO.5" and found at pin 18 on the Model B/B+.
+* Echo - this captures the returning wave that bounces off the object we are pointing at. This needs to be connected to BCM pin 24, known as "GPIO.5" and found at pin 18 on the Model B/B+.
 * GND - this is the ground (0v) connection used to close the circuit. It is available on pins 6, 9, 14, 20 and 25 on the Model B. The Model B+ has even more.  
 
 The Vcc and GND pins are not important - just find any +5V or GND connections.
 The trigger and echo pins are important because they are configured directly in the code.
-If you don't use GPIO23 and GPIO24, then you need to change the ``tank_watcher.py`` code:
+If you don't use BCM 23 and BCM 24, then you need to change the ``tank_watcher.py`` code:
 
 ``
 hcsr04_sensor = Hcsr04Sensor(23, 24)

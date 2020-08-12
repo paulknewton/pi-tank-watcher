@@ -94,7 +94,7 @@ I wanted a way to install the floats in the sump, but also protect them from get
 ![float-pipe](img/float-pipe.jpg)
 
 ## Buying a new pump
-We have a pump controller and the water-level sensors. But back to the sump pump: my previous sump pump had an integrated pump and float. The solution I was coming up had a custom controller that separated out the pump-control logic - this meant buying a new standalone pump that could be switched on and off by switching the mains current. I went with this one - a pretty standard outdoor pond pump.
+We have a pump controller and the water-level sensors. But back to the sump pump: my previous sump pump had an integrated pump and float. The solution I was coming up had a custom controller that separated out the pump-control logic - this meant buying a new standalone pump that could be switched on and off by switching the mains current. I went with a standard outdoor pond pump that you can find in any hardware store (just make sure it handles so called 'dirty' water with sand and other particles in it.
 
 A few points that are important:
 * The pump needs to be activated/de-activated only by opening and closing the current supply. No additional switches or manual button-presses needed.
@@ -108,8 +108,8 @@ I decided to add an output signal to the controller which I could connect to a R
 
 ![pi](img/pi.jpg)
 
-The code monitors the GPIO PIN (via interrupts to avoid endlessly looping).
-In my setup, the activation of the pump triggers a high signal to the raspberry Pi, connected to pin 22 on the Model B (referred to as GPIO6). The ground is just connected to any of the GND pins on the Pi.
+The code monitors a GPIO PIN (via interrupts to avoid endlessly looping).
+In my setup, the activation of the pump triggers a high signal to the raspberry Pi, connected to pin 22 on the Model B (referred to as GPIO.6). The ground is just connected to any of the GND pins on the Pi.
 
 Start the code that monitors the pump:
 
@@ -121,7 +121,7 @@ Note how you need to pass in a bunch of parameters here:
 
 * thingspeak - the key you are using for Thingspeak to log the pump on/off events. Whenever there is a change of state, it logs the event to a ThingSpeak channel (I describe ThingSpeak in more detail in the other pi-tank-watcher pages, so I won’t repeat it here).
 * gpio - the GPIO library used to interface with the GPIO pins. Supported values are ``RPi.GPIO`` or ``wiringpi``.
-* 22 - the number of the pin that will be monitored. When the pump switches on, a high signal will be sent to this pin. If you are using another pin, then change this argument to suit (note how I am using the physical pin number here, not the BCM label or some other label. In this exampoe, I am using pin 22 which is the pin referred to as "GPIO.6".
+* 22 - the number of the pin that will be monitored. When the pump switches on, a high signal will be sent to this pin. If you are using another pin, then change this argument to suit (note how I am using the physical pin number here, not the BCM label or some other label. In this example, I am using pin 22 which is the pin referred to as "GPIO.6".
  
 This is the pump activity I have been seeing:
 
